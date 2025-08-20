@@ -1,6 +1,15 @@
 import { Link } from "react-router";
+import { MainButton } from "../components/Button";
+import { TextInput } from "../components/Input";
+import { useState } from "react";
 
 export default function () {
+    const [newCustomerName, setNewCustomerName] = useState("")
+
+    async function addCustomerForm(e: any) {
+        e.preventDefault()
+    }
+
     return (
         <>
             <header className="mb-12 flex items-center justify-between">
@@ -14,14 +23,17 @@ export default function () {
             </header>
 
             <main>
-                <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8 flex items-center justify-between">
+                <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
                     <h2 className="text-2xl font-bold mb-4">New Customer</h2>
-                    <form>
-                        <input type="text" />
-                        <button>Add</button>
+                    <form onSubmit={addCustomerForm} className="flex flex-col gap-2">
+                        <label htmlFor="name" className="cursor-pointer text-sm font-semibold">Name</label>
+                        <TextInput id="name" placeholder="Jon Doe" value={newCustomerName} onChange={setNewCustomerName} />
+                        <div className="flex justify-end">
+                            <MainButton>Add</MainButton>
+                        </div>
                     </form>
                 </div>
-                <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8 flex items-center justify-between">
+                <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
                     <h2 className="text-2xl font-bold mb-4">Customers</h2>
                 </div>
             </main>
