@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { Outlet } from "react-router";
-import { GetCustomers } from "../../wailsjs/go/customerhandler/CustomerHandler"
+import { GetCustomers, AddCustomer } from "../../wailsjs/go/customerhandler/CustomerHandler"
 
 interface Customer {
     label: string
@@ -10,6 +10,7 @@ interface Customer {
 interface AuthContextType {
     customers: Customer[]
     reloadCustomers: () => Promise<void>
+    addCustomer: (name: string) => Promise<void>
 }
 
 const CustomerContext = createContext<AuthContextType | null>(null)
@@ -45,8 +46,16 @@ export function CustomerProvider() {
         await fetchData()
     }
 
+    async function addCustomer(name: string) {
+        const success = await AddCustomer(name)
+        if (!success) {
+            alert("Adding customer failed! Please check logs.")
+        }
+        await reloadCustomers()
+    }
+
     return (
-        <CustomerContext.Provider value={{ customers: customers, reloadCustomers: reloadCustomers }}>
+        <CustomerContext.Provider value={{ customers: customers, reloadCustomers: reloadCustomers, addCustomer: addCustomer }}>
             {loading ? <></> : <Outlet />}
         </CustomerContext.Provider>
     )

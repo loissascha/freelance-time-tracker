@@ -26,3 +26,11 @@ func (h *CustomerHandler) GetCustomers() []entities.Customer {
 	}
 	return customers
 }
+
+func (h *CustomerHandler) AddCustomer(name string) bool {
+	_, err := h.customerRepo.AddCustomer(name)
+	if err != nil {
+		return false
+	}
+	return true
+}
