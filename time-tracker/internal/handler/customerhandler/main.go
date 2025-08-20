@@ -2,7 +2,6 @@ package customerhandler
 
 import (
 	"context"
-	"fmt"
 	"time-tracker/internal/entities"
 	"time-tracker/internal/repositories/customerrepository"
 )
@@ -26,9 +25,4 @@ func (h *CustomerHandler) GetCustomers() []entities.Customer {
 		panic(err)
 	}
 	return customers
-}
-
-// Greet returns a greeting for the given name
-func (a *CustomerHandler) Greet(name string) string {
-	return fmt.Sprintf("Hello %s, It's show time!", name)
 }

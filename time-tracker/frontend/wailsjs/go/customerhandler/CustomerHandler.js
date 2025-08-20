@@ -5,7 +5,3 @@
 export function GetCustomers() {
   return window['go']['customerhandler']['CustomerHandler']['GetCustomers']();
 }
-
-export function Greet(arg1) {
-  return window['go']['customerhandler']['CustomerHandler']['Greet'](arg1);
-}

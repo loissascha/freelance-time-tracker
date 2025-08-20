@@ -3,5 +3,3 @@
 import {entities} from '../models';
 
 export function GetCustomers():Promise<Array<entities.Customer>>;
-
-export function Greet(arg1:string):Promise<string>;
