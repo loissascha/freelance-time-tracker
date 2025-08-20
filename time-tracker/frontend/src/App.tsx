@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
+import { Select } from '@base-ui-components/react';
+import styles from "./styles/baseuiselect.module.css"
 
 // Mock data - replace with your actual data fetching
 const customers = [
-    { id: 1, name: 'Client A' },
-    { id: 2, name: 'Client B' },
-    { id: 3, name: 'Project X' },
-];
+    { label: 'Client A', value: 1 },
+    { label: 'Client B', value: 2 },
+    { label: 'Client C', value: 3 },
+]
 
 interface TimeEntry {
     id: number;
@@ -16,7 +18,7 @@ interface TimeEntry {
 }
 
 function App() {
-    const [selectedCustomer, setSelectedCustomer] = useState<number | null>(customers[0]?.id || null);
+    const [selectedCustomer, setSelectedCustomer] = useState<number | null>(customers[0]?.value || null);
     const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
     const [isTracking, setIsTracking] = useState(false);
     const [activeEntry, setActiveEntry] = useState<TimeEntry | null>(null);
@@ -37,11 +39,11 @@ function App() {
             alert('Please select a customer first.');
             return;
         }
-        const customer = customers.find(c => c.id === selectedCustomer);
+        const customer = customers.find(c => c.value === selectedCustomer);
         if (customer) {
             const newEntry: TimeEntry = {
                 id: Date.now(),
-                customerName: customer.name,
+                customerName: customer.label,
                 startTime: new Date(),
                 endTime: null,
                 comment: '',
@@ -105,17 +107,30 @@ function App() {
                     <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8 flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <label htmlFor="customer-select" className="text-lg">Customer:</label>
-                            <select
-                                id="customer-select"
-                                disabled={isTracking}
-                                value={selectedCustomer || ''}
-                                onChange={(e) => setSelectedCustomer(Number(e.target.value))}
-                                className="bg-gray-700 border border-gray-600 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
-                            >
-                                {customers.map(c => (
-                                    <option key={c.id} value={c.id}>{c.name}</option>
-                                ))}
-                            </select>
+                            <Select.Root items={customers} value={selectedCustomer} onValueChange={(value) => setSelectedCustomer(value)}>
+                                <Select.Trigger className={styles.Select}>
+                                    <Select.Value />
+                                    <Select.Icon className={styles.SelectIcon}>
+                                        <ChevronUpDownIcon />
+                                    </Select.Icon>
+                                </Select.Trigger>
+                                <Select.Portal>
+                                    <Select.Positioner className={styles.Positioner} sideOffset={8}>
+                                        <Select.ScrollUpArrow className={styles.ScrollArrow} />
+                                        <Select.Popup className={styles.Popup}>
+                                            {customers.map(({ label, value }) => (
+                                                <Select.Item key={label} value={value} className={styles.Item}>
+                                                    <Select.ItemIndicator className={styles.ItemIndicator}>
+                                                        <CheckIcon className={styles.ItemIndicatorIcon} />
+                                                    </Select.ItemIndicator>
+                                                    <Select.ItemText className={styles.ItemText}>{label}</Select.ItemText>
+                                                </Select.Item>
+                                            ))}
+                                        </Select.Popup>
+                                        <Select.ScrollDownArrow className={styles.ScrollArrow} />
+                                    </Select.Positioner>
+                                </Select.Portal>
+                            </Select.Root>
                         </div>
                         <div className="flex items-center gap-6">
                             {isTracking && (
@@ -168,6 +183,30 @@ function App() {
                 </main>
             </div>
         </div>
+    );
+}
+function ChevronUpDownIcon(props: React.ComponentProps<'svg'>) {
+    return (
+        <svg
+            width="8"
+            height="12"
+            viewBox="0 0 8 12"
+            fill="none"
+            stroke="currentcolor"
+            strokeWidth="1.5"
+            {...props}
+        >
+            <path d="M0.5 4.5L4 1.5L7.5 4.5" />
+            <path d="M0.5 7.5L4 10.5L7.5 7.5" />
+        </svg>
+    );
+}
+
+function CheckIcon(props: React.ComponentProps<'svg'>) {
+    return (
+        <svg fill="currentcolor" width="10" height="10" viewBox="0 0 10 10" {...props}>
+            <path d="M9.1603 1.12218C9.50684 1.34873 9.60427 1.81354 9.37792 2.16038L5.13603 8.66012C5.01614 8.8438 4.82192 8.96576 4.60451 8.99384C4.3871 9.02194 4.1683 8.95335 4.00574 8.80615L1.24664 6.30769C0.939709 6.02975 0.916013 5.55541 1.19372 5.24822C1.47142 4.94102 1.94536 4.91731 2.2523 5.19524L4.36085 7.10461L8.12299 1.33999C8.34934 0.993152 8.81376 0.895638 9.1603 1.12218Z" />
+        </svg>
     );
 }
 
