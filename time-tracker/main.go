@@ -1,7 +1,9 @@
 package main
 
 import (
+	"context"
 	"embed"
+	"time-tracker/internal/handler/apphandler"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -11,9 +13,11 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
+var apph *apphandler.App
+
 func main() {
 	// Create an instance of the app structure
-	app := NewApp()
+	apph = apphandler.NewApp()
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -23,14 +27,18 @@ func main() {
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
-		OnStartup:        app.startup,
+		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 255},
+		OnStartup:        startup,
 		Bind: []interface{}{
-			app,
+			apph,
 		},
 	})
 
 	if err != nil {
 		println("Error:", err.Error())
 	}
+}
+
+func startup(ctx context.Context) {
+	apph.Ctx = ctx
 }
