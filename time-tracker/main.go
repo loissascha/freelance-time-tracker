@@ -5,6 +5,8 @@ import (
 	"embed"
 	"time-tracker/internal/db"
 	"time-tracker/internal/handler/apphandler"
+	"time-tracker/internal/handler/customerhandler"
+	"time-tracker/internal/repositories/customerrepository"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -15,13 +17,19 @@ import (
 var assets embed.FS
 
 var apph *apphandler.App
+var customerh *customerhandler.CustomerHandler
 
 func main() {
 	// database
-	db.InitDb()
+	database := db.InitDb()
+	defer database.Db.Close()
 
-	// Create an instance of the app structure
+	// repositories
+	customerRepo := customerrepository.New(database)
+
+	// handlers
 	apph = apphandler.NewApp()
+	customerh = customerhandler.NewCustomerHandler(customerRepo)
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -35,6 +43,7 @@ func main() {
 		OnStartup:        startup,
 		Bind: []interface{}{
 			apph,
+			customerh,
 		},
 	})
 
@@ -45,4 +54,5 @@ func main() {
 
 func startup(ctx context.Context) {
 	apph.Ctx = ctx
+	customerh.Ctx = ctx
 }

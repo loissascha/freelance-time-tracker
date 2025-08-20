@@ -23,7 +23,6 @@ func InitDb() *Db {
 	if err != nil {
 		panic(err)
 	}
-	defer db.Close()
 
 	// ping database
 	err = db.Ping()
