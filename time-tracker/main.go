@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"embed"
+	"time-tracker/internal/db"
 	"time-tracker/internal/handler/apphandler"
 
 	"github.com/wailsapp/wails/v2"
@@ -16,6 +17,9 @@ var assets embed.FS
 var apph *apphandler.App
 
 func main() {
+	// database
+	db.InitDb()
+
 	// Create an instance of the app structure
 	apph = apphandler.NewApp()
 
