@@ -24,20 +24,18 @@ export function useCustomer() {
 
 export function CustomerProvider() {
     const [customers, setCustomers] = useState<Customer[]>([])
-    // const customers = [
-    //     { label: 'Client A', value: 1 },
-    //     { label: 'Client B', value: 2 },
-    //     { label: 'Client C', value: 3 },
-    // ]
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         async function fetchData() {
+            setLoading(true)
             const newCustomers: Customer[] = []
             const res = await GetCustomers()
             for (var c of res) {
                 newCustomers.push({ label: c.name, value: c.id })
             }
             setCustomers(newCustomers)
+            setLoading(false)
         }
         fetchData()
     }, [])
@@ -48,7 +46,7 @@ export function CustomerProvider() {
 
     return (
         <CustomerContext.Provider value={{ customers: customers, reloadCustomers: reloadCustomers }}>
-            <Outlet />
+            {loading ? <></> : <Outlet />}
         </CustomerContext.Provider>
     )
 }
