@@ -3,6 +3,8 @@ import { MainButton } from "../components/Button";
 import { TextInput } from "../components/Input";
 import { useState } from "react";
 import { useCustomer } from "../context/CustomerContext";
+import BackspaceIcon from "../components/icons/BackspaceIcon";
+import ExportIcon from "../components/icons/ExportIcon";
 
 export default function () {
     const { customers, addCustomer } = useCustomer()
@@ -42,9 +44,9 @@ export default function () {
                         {customers.map((customer) => (
                             <div className="flex py-2 px-3 border-b border-gray-600 last-of-type:border-b-0 hover:bg-gray-700">
                                 <div className="grow">{customer.label}</div>
-                                <div>
-                                    Export
-                                    Delete
+                                <div className="flex gap-1">
+                                    <ExportIcon />
+                                    <BackspaceIcon className="text-red-500" />
                                 </div>
                             </div>
                         ))}
