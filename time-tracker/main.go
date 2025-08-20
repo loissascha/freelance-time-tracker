@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"embed"
+	"fmt"
 	"time-tracker/internal/db"
 	"time-tracker/internal/handler/apphandler"
 	"time-tracker/internal/handler/customerhandler"
@@ -27,12 +28,15 @@ func main() {
 	// repositories
 	customerRepo := customerrepository.New(database)
 
+	customers, err := customerRepo.ListCustomers()
+	fmt.Println("customers:", customers)
+
 	// handlers
 	apph = apphandler.NewApp()
 	customerh = customerhandler.NewCustomerHandler(customerRepo)
 
 	// Create application with options
-	err := wails.Run(&options.App{
+	err = wails.Run(&options.App{
 		Title:  "time-tracker",
 		Width:  1024,
 		Height: 768,

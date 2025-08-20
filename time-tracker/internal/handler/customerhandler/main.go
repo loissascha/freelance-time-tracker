@@ -3,6 +3,7 @@ package customerhandler
 import (
 	"context"
 	"fmt"
+	"time-tracker/internal/entities"
 	"time-tracker/internal/repositories/customerrepository"
 )
 
@@ -17,6 +18,14 @@ func NewCustomerHandler(customerRepo *customerrepository.CustomerRepository) *Cu
 	return &CustomerHandler{
 		customerRepo: customerRepo,
 	}
+}
+
+func (h *CustomerHandler) GetCustomers() []entities.Customer {
+	customers, err := h.customerRepo.ListCustomers()
+	if err != nil {
+		panic(err)
+	}
+	return customers
 }
 
 // Greet returns a greeting for the given name

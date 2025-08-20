@@ -1,6 +1,9 @@
 package customerrepository
 
-import "time-tracker/internal/db"
+import (
+	"time-tracker/internal/db"
+	"time-tracker/internal/entities"
+)
 
 type CustomerRepository struct {
 	db *db.Db
@@ -10,6 +13,26 @@ func New(db *db.Db) *CustomerRepository {
 	return &CustomerRepository{
 		db: db,
 	}
+}
+
+func (r *CustomerRepository) ListCustomers() ([]entities.Customer, error) {
+	selectSql := `SELECT id, name FROM customers ORDER BY id`
+	rows, err := r.db.Db.Query(selectSql)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var customers []entities.Customer
+	for rows.Next() {
+		var customer entities.Customer
+		if err := rows.Scan(&customer.ID, &customer.Name); err != nil {
+			return nil, err
+		}
+		customers = append(customers, customer)
+	}
+
+	return customers, nil
 }
 
 func (r *CustomerRepository) AddCustomer(name string) (int64, error) {
@@ -40,3 +63,4 @@ func (r *CustomerRepository) AddCustomer(name string) (int64, error) {
 
 	return id, tx.Commit()
 }
+
