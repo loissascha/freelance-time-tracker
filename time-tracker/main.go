@@ -17,8 +17,8 @@ import (
 //go:embed all:frontend/dist
 var assets embed.FS
 
-var apph *apphandler.App
-var customerh *customerhandler.CustomerHandler
+var appHandler *apphandler.App
+var customerHandler *customerhandler.CustomerHandler
 
 func main() {
 	// database
@@ -32,8 +32,8 @@ func main() {
 	fmt.Println("customers:", customers)
 
 	// handlers
-	apph = apphandler.NewApp()
-	customerh = customerhandler.NewCustomerHandler(customerRepo)
+	appHandler = apphandler.NewApp()
+	customerHandler = customerhandler.NewCustomerHandler(customerRepo)
 
 	// Create application with options
 	err = wails.Run(&options.App{
@@ -46,8 +46,8 @@ func main() {
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 255},
 		OnStartup:        startup,
 		Bind: []interface{}{
-			apph,
-			customerh,
+			appHandler,
+			customerHandler,
 		},
 	})
 
@@ -57,6 +57,6 @@ func main() {
 }
 
 func startup(ctx context.Context) {
-	apph.Ctx = ctx
-	customerh.Ctx = ctx
+	appHandler.Ctx = ctx
+	customerHandler.Ctx = ctx
 }
