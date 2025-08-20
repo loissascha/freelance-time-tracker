@@ -2,13 +2,7 @@ import { useState, useEffect } from 'react';
 import { Select } from '@base-ui-components/react';
 import styles from "../styles/baseuiselect.module.css"
 import { Link } from 'react-router';
-
-// Mock data - replace with your actual data fetching
-const customers = [
-    { label: 'Client A', value: 1 },
-    { label: 'Client B', value: 2 },
-    { label: 'Client C', value: 3 },
-]
+import { useCustomer } from '../context/CustomerContext';
 
 interface TimeEntry {
     id: number;
@@ -19,6 +13,7 @@ interface TimeEntry {
 }
 
 function App() {
+    const { customers } = useCustomer()
     const [selectedCustomer, setSelectedCustomer] = useState<number | null>(customers[0]?.value || null);
     const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
     const [isTracking, setIsTracking] = useState(false);
