@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Select } from '@base-ui-components/react';
 import styles from "../styles/baseuiselect.module.css"
+import { Link } from 'react-router';
 
 // Mock data - replace with your actual data fetching
 const customers = [
@@ -91,98 +92,96 @@ function App() {
     }
 
     return (
-        <div className="bg-gray-900 text-white min-h-screen font-sans p-8">
-            <div className="max-w-4xl mx-auto">
-                <header className="mb-12 flex items-center justify-between">
-                    <div>
-                        <h1 className="text-4xl font-bold text-gray-100">Time Tracker</h1>
-                        <p className="text-gray-400">Track your work with ease.</p>
-                    </div>
-                    <button className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
-                        Manage Customers
-                    </button>
-                </header>
+        <>
+            <header className="mb-12 flex items-center justify-between">
+                <div>
+                    <h1 className="text-4xl font-bold text-gray-100">Time Tracker</h1>
+                    <p className="text-gray-400">Track your work with ease.</p>
+                </div>
+                <Link to="/manage-customers" className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                    Manage Customers
+                </Link>
+            </header>
 
-                <main>
-                    <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8 flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                            <label htmlFor="customer-select" className="text-lg">Customer:</label>
-                            <Select.Root items={customers} value={selectedCustomer} onValueChange={(value) => setSelectedCustomer(value)}>
-                                <Select.Trigger className={styles.Select}>
-                                    <Select.Value />
-                                    <Select.Icon className={styles.SelectIcon}>
-                                        <ChevronUpDownIcon />
-                                    </Select.Icon>
-                                </Select.Trigger>
-                                <Select.Portal>
-                                    <Select.Positioner className={styles.Positioner} sideOffset={8}>
-                                        <Select.ScrollUpArrow className={styles.ScrollArrow} />
-                                        <Select.Popup className={styles.Popup}>
-                                            {customers.map(({ label, value }) => (
-                                                <Select.Item key={label} value={value} className={styles.Item}>
-                                                    <Select.ItemIndicator className={styles.ItemIndicator}>
-                                                        <CheckIcon className={styles.ItemIndicatorIcon} />
-                                                    </Select.ItemIndicator>
-                                                    <Select.ItemText className={styles.ItemText}>{label}</Select.ItemText>
-                                                </Select.Item>
-                                            ))}
-                                        </Select.Popup>
-                                        <Select.ScrollDownArrow className={styles.ScrollArrow} />
-                                    </Select.Positioner>
-                                </Select.Portal>
-                            </Select.Root>
-                        </div>
-                        <div className="flex items-center gap-6">
-                            {isTracking && (
-                                <div className="text-3xl font-mono bg-gray-900 px-4 py-2 rounded-md">
-                                    {formatElapsedTime(elapsedTime)}
-                                </div>
-                            )}
-                            <button
-                                onClick={isTracking ? handleStopTracking : handleStartTracking}
-                                disabled={!selectedCustomer}
-                                className={`px-8 py-3 rounded-md font-semibold text-white transition-all duration-300 ${isTracking
-                                    ? 'bg-red-600 hover:bg-red-700'
-                                    : 'bg-blue-600 hover:bg-blue-700'
-                                    } disabled:bg-gray-500 disabled:cursor-not-allowed`}
-                            >
-                                {isTracking ? 'Stop Tracking' : 'Start Tracking'}
-                            </button>
-                        </div>
+            <main>
+                <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                        <label htmlFor="customer-select" className="text-lg">Customer:</label>
+                        <Select.Root items={customers} value={selectedCustomer} onValueChange={(value) => setSelectedCustomer(value)}>
+                            <Select.Trigger className={styles.Select}>
+                                <Select.Value />
+                                <Select.Icon className={styles.SelectIcon}>
+                                    <ChevronUpDownIcon />
+                                </Select.Icon>
+                            </Select.Trigger>
+                            <Select.Portal>
+                                <Select.Positioner className={styles.Positioner} sideOffset={8}>
+                                    <Select.ScrollUpArrow className={styles.ScrollArrow} />
+                                    <Select.Popup className={styles.Popup}>
+                                        {customers.map(({ label, value }) => (
+                                            <Select.Item key={label} value={value} className={styles.Item}>
+                                                <Select.ItemIndicator className={styles.ItemIndicator}>
+                                                    <CheckIcon className={styles.ItemIndicatorIcon} />
+                                                </Select.ItemIndicator>
+                                                <Select.ItemText className={styles.ItemText}>{label}</Select.ItemText>
+                                            </Select.Item>
+                                        ))}
+                                    </Select.Popup>
+                                    <Select.ScrollDownArrow className={styles.ScrollArrow} />
+                                </Select.Positioner>
+                            </Select.Portal>
+                        </Select.Root>
                     </div>
+                    <div className="flex items-center gap-6">
+                        {isTracking && (
+                            <div className="text-3xl font-mono bg-gray-900 px-4 py-2 rounded-md">
+                                {formatElapsedTime(elapsedTime)}
+                            </div>
+                        )}
+                        <button
+                            onClick={isTracking ? handleStopTracking : handleStartTracking}
+                            disabled={!selectedCustomer}
+                            className={`px-8 py-3 rounded-md font-semibold text-white transition-all duration-300 ${isTracking
+                                ? 'bg-red-600 hover:bg-red-700'
+                                : 'bg-blue-600 hover:bg-blue-700'
+                                } disabled:bg-gray-500 disabled:cursor-not-allowed`}
+                        >
+                            {isTracking ? 'Stop Tracking' : 'Start Tracking'}
+                        </button>
+                    </div>
+                </div>
 
-                    <div className="bg-gray-800 rounded-lg shadow-lg p-6">
-                        <h2 className="text-2xl font-bold mb-4">Time Log</h2>
-                        <div className="space-y-4">
-                            {timeEntries.length > 0 ? (
-                                timeEntries.map(entry => (
-                                    <div key={entry.id} className="bg-gray-700 p-4 rounded-md flex flex-wrap items-center justify-between gap-4">
-                                        <div className="flex-grow">
-                                            <p className="font-bold text-lg">{entry.customerName}</p>
-                                            <p className="text-sm text-gray-400">
-                                                {entry.startTime.toLocaleDateString()} | {formatTime(entry.startTime)} - {entry.endTime ? formatTime(entry.endTime) : 'Now'}
-                                            </p>
-                                        </div>
-                                        <div className="text-xl font-semibold w-32 text-center">
-                                            {formatDuration(entry.startTime, entry.endTime)}
-                                        </div>
-                                        <input
-                                            type="text"
-                                            placeholder="Add a comment..."
-                                            value={entry.comment}
-                                            onChange={(e) => handleCommentChange(entry.id, e.target.value)}
-                                            className="bg-gray-600 border border-gray-500 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow min-w-[200px]"
-                                        />
+                <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+                    <h2 className="text-2xl font-bold mb-4">Time Log</h2>
+                    <div className="space-y-4">
+                        {timeEntries.length > 0 ? (
+                            timeEntries.map(entry => (
+                                <div key={entry.id} className="bg-gray-700 p-4 rounded-md flex flex-wrap items-center justify-between gap-4">
+                                    <div className="flex-grow">
+                                        <p className="font-bold text-lg">{entry.customerName}</p>
+                                        <p className="text-sm text-gray-400">
+                                            {entry.startTime.toLocaleDateString()} | {formatTime(entry.startTime)} - {entry.endTime ? formatTime(entry.endTime) : 'Now'}
+                                        </p>
                                     </div>
-                                ))
-                            ) : (
-                                <p className="text-gray-400 text-center py-8">No time entries yet. Start tracking to log your work.</p>
-                            )}
-                        </div>
+                                    <div className="text-xl font-semibold w-32 text-center">
+                                        {formatDuration(entry.startTime, entry.endTime)}
+                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Add a comment..."
+                                        value={entry.comment}
+                                        onChange={(e) => handleCommentChange(entry.id, e.target.value)}
+                                        className="bg-gray-600 border border-gray-500 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow min-w-[200px]"
+                                    />
+                                </div>
+                            ))
+                        ) : (
+                            <p className="text-gray-400 text-center py-8">No time entries yet. Start tracking to log your work.</p>
+                        )}
                     </div>
-                </main>
-            </div>
-        </div>
+                </div>
+            </main>
+        </>
     );
 }
 function ChevronUpDownIcon(props: React.ComponentProps<'svg'>) {
