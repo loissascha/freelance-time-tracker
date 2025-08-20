@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Select } from '@base-ui-components/react';
-import styles from "./styles/baseuiselect.module.css"
+import styles from "../styles/baseuiselect.module.css"
 
 // Mock data - replace with your actual data fetching
 const customers = [
