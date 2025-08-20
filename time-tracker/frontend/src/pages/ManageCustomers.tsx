@@ -16,6 +16,10 @@ export default function () {
             <main>
                 <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8 flex items-center justify-between">
                     <h2 className="text-2xl font-bold mb-4">New Customer</h2>
+                    <form>
+                        <input type="text" />
+                        <button>Add</button>
+                    </form>
                 </div>
                 <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8 flex items-center justify-between">
                     <h2 className="text-2xl font-bold mb-4">Customers</h2>

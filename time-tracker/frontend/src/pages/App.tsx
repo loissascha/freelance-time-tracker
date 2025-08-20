@@ -3,6 +3,7 @@ import { Select } from '@base-ui-components/react';
 import styles from "../styles/baseuiselect.module.css"
 import { Link } from 'react-router';
 import { useCustomer } from '../context/CustomerContext';
+import { MainButton, RedButton } from '../components/Button';
 
 interface TimeEntry {
     id: number;
@@ -133,16 +134,10 @@ function App() {
                                 {formatElapsedTime(elapsedTime)}
                             </div>
                         )}
-                        <button
-                            onClick={isTracking ? handleStopTracking : handleStartTracking}
-                            disabled={!selectedCustomer}
-                            className={`px-8 py-3 rounded-md font-semibold text-white transition-all duration-300 ${isTracking
-                                ? 'bg-red-600 hover:bg-red-700'
-                                : 'bg-blue-600 hover:bg-blue-700'
-                                } disabled:bg-gray-500 disabled:cursor-not-allowed`}
-                        >
-                            {isTracking ? 'Stop Tracking' : 'Start Tracking'}
-                        </button>
+                        {isTracking ?
+                            <RedButton onClick={handleStopTracking} disabled={!selectedCustomer}>Stop Tracking</RedButton> :
+                            <MainButton onClick={handleStartTracking} disabled={!selectedCustomer}>Start Tracking</MainButton>
+                        }
                     </div>
                 </div>
 
