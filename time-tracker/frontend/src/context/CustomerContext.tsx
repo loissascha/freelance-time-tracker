@@ -26,22 +26,23 @@ export function CustomerProvider() {
     const [customers, setCustomers] = useState<Customer[]>([])
     const [loading, setLoading] = useState(true)
 
-    useEffect(() => {
-        async function fetchData() {
-            setLoading(true)
-            const newCustomers: Customer[] = []
-            const res = await GetCustomers()
-            for (var c of res) {
-                newCustomers.push({ label: c.name, value: c.id })
-            }
-            setCustomers(newCustomers)
-            setLoading(false)
+    async function fetchData() {
+        setLoading(true)
+        const newCustomers: Customer[] = []
+        const res = await GetCustomers()
+        for (var c of res) {
+            newCustomers.push({ label: c.name, value: c.id })
         }
+        setCustomers(newCustomers)
+        setLoading(false)
+    }
+
+    useEffect(() => {
         fetchData()
     }, [])
 
     async function reloadCustomers() {
-
+        await fetchData()
     }
 
     return (
