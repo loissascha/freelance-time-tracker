@@ -7,14 +7,16 @@ interface Customer {
     value: number
 }
 
-interface AuthContextType {
+interface CustomerContextType {
     customers: Customer[]
+    selectedCustomer: number | null
     reloadCustomers: () => Promise<void>
     addCustomer: (name: string) => Promise<void>
     deleteCustomer: (id: number) => Promise<void>
+    setSelectedCustomer: (id: number | null) => void
 }
 
-const CustomerContext = createContext<AuthContextType | null>(null)
+const CustomerContext = createContext<CustomerContextType | null>(null)
 
 export function useCustomer() {
     const context = useContext(CustomerContext)
@@ -26,6 +28,7 @@ export function useCustomer() {
 
 export function CustomerProvider() {
     const [customers, setCustomers] = useState<Customer[]>([])
+    const [selectedCustomer, setSelectedCustomer] = useState<number | null>(customers[0]?.value || null);
     const [loading, setLoading] = useState(true)
 
     async function fetchData() {
@@ -38,6 +41,12 @@ export function CustomerProvider() {
         setCustomers(newCustomers)
         setLoading(false)
     }
+
+    useEffect(() => {
+        if (selectedCustomer == null) {
+            setSelectedCustomer(customers[0]?.value || null)
+        }
+    }, [customers])
 
     useEffect(() => {
         fetchData()
@@ -64,7 +73,7 @@ export function CustomerProvider() {
     }
 
     return (
-        <CustomerContext.Provider value={{ customers: customers, reloadCustomers: reloadCustomers, addCustomer: addCustomer, deleteCustomer: deleteCustomer }}>
+        <CustomerContext.Provider value={{ customers: customers, selectedCustomer: selectedCustomer, setSelectedCustomer: setSelectedCustomer, reloadCustomers: reloadCustomers, addCustomer: addCustomer, deleteCustomer: deleteCustomer }}>
             {loading ? <></> : <Outlet />}
         </CustomerContext.Provider>
     )

@@ -14,8 +14,7 @@ interface TimeEntry {
 }
 
 function App() {
-    const { customers } = useCustomer()
-    const [selectedCustomer, setSelectedCustomer] = useState<number | null>(customers[0]?.value || null);
+    const { customers, selectedCustomer, setSelectedCustomer } = useCustomer()
     const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
     const [isTracking, setIsTracking] = useState(false);
     const [activeEntry, setActiveEntry] = useState<TimeEntry | null>(null);
