@@ -7,14 +7,12 @@ import (
 	"time-tracker/internal/repositories/trackedtimesrepository"
 )
 
-// CustomerHandler struct
 type CustomerHandler struct {
 	Ctx          context.Context
 	customerRepo *customerrepository.CustomerRepository
 	timeRepo     *trackedtimesrepository.TrackedTimesRepository
 }
 
-// NewApp creates a new App application struct
 func NewCustomerHandler(customerRepo *customerrepository.CustomerRepository, timeRepo *trackedtimesrepository.TrackedTimesRepository) *CustomerHandler {
 	return &CustomerHandler{
 		customerRepo: customerRepo,
