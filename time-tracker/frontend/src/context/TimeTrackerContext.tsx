@@ -9,6 +9,7 @@ interface TimeEntry {
     startTime: Date;
     endTime: Date | null;
     comment: string;
+    hasCommentUpdate: boolean
 }
 
 interface TimeTrackerContextType {
@@ -59,6 +60,7 @@ export function TimeTrackerProvider() {
             startTime: new Date(),
             endTime: null,
             comment: '',
+            hasCommentUpdate: false
         };
         setActiveEntry(newEntry);
         setIsTracking(true);
@@ -79,7 +81,7 @@ export function TimeTrackerProvider() {
 
     const handleCommentChange = (id: number, comment: string) => {
         setTimeEntries(prevEntries =>
-            prevEntries.map(entry => (entry.id === id ? { ...entry, comment } : entry))
+            prevEntries.map(entry => (entry.id === id ? { ...entry, comment, hasCommentUpdate: true } : entry))
         );
     };
 
@@ -99,7 +101,8 @@ export function TimeTrackerProvider() {
                     customerId: entry.customer_id,
                     comment: entry.comment,
                     startTime: new Date(entry.startTime),
-                    endTime: new Date(entry.endTime)
+                    endTime: new Date(entry.endTime),
+                    hasCommentUpdate: false
                 })
             }
         }

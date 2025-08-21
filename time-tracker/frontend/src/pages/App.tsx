@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 import { useCustomer } from '../context/CustomerContext';
 import { MainButton, RedButton } from '../components/Button';
 import { useTimeTracker } from '../context/TimeTrackerContext';
+import SaveIcon from '../components/icons/SaveIcon';
 
 function App() {
     const { customers, selectedCustomer, setSelectedCustomer } = useCustomer()
@@ -90,7 +91,6 @@ function App() {
                             timeEntries.map(entry => (
                                 <div key={entry.id} className="bg-gray-700 p-4 rounded-md flex flex-wrap items-center justify-between gap-4">
                                     <div className="flex-grow">
-                                        <p className="font-bold text-lg">{entry.customerId}</p>
                                         <p className="text-sm text-gray-400">
                                             {entry.startTime.toLocaleDateString()} | {formatTime(entry.startTime)} - {entry.endTime ? formatTime(entry.endTime) : 'Now'}
                                         </p>
@@ -98,13 +98,20 @@ function App() {
                                     <div className="text-xl font-semibold w-32 text-center">
                                         {formatDuration(entry.startTime, entry.endTime)}
                                     </div>
-                                    <input
-                                        type="text"
-                                        placeholder="Add a comment..."
-                                        value={entry.comment}
-                                        onChange={(e) => changeComment(entry.id, e.target.value)}
-                                        className="bg-gray-600 border border-gray-500 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow min-w-[200px]"
-                                    />
+                                    <div className='flex gap-1'>
+                                        <input
+                                            type="text"
+                                            placeholder="Add a comment..."
+                                            value={entry.comment}
+                                            onChange={(e) => changeComment(entry.id, e.target.value)}
+                                            className="bg-gray-600 border border-gray-500 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow min-w-[200px]"
+                                        />
+                                        {entry.hasCommentUpdate ? (
+                                            <button className='bg-blue-600 hover:bg-blue-700 cursor-pointer rounded-lg px-3'>
+                                                <SaveIcon />
+                                            </button>
+                                        ) : null}
+                                    </div>
                                 </div>
                             ))
                         ) : (
