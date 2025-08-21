@@ -8,7 +8,7 @@ import SaveIcon from '../components/icons/SaveIcon';
 
 function App() {
     const { customers, selectedCustomer, setSelectedCustomer } = useCustomer()
-    const { timeEntries, elapsedTime, isTracking, startTracking, stopTracking, changeComment } = useTimeTracker()
+    const { timeEntries, elapsedTime, isTracking, startTracking, stopTracking, changeComment, saveComment } = useTimeTracker()
 
     const formatTime = (date: Date) => {
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -107,7 +107,9 @@ function App() {
                                             className="bg-gray-600 border border-gray-500 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow min-w-[200px]"
                                         />
                                         {entry.hasCommentUpdate ? (
-                                            <button className='bg-blue-600 hover:bg-blue-700 cursor-pointer rounded-lg px-3'>
+                                            <button onClick={() => {
+                                                saveComment(entry.id)
+                                            }} className='bg-blue-600 hover:bg-blue-700 cursor-pointer rounded-lg px-3'>
                                                 <SaveIcon />
                                             </button>
                                         ) : null}

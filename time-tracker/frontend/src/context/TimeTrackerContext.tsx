@@ -19,6 +19,7 @@ interface TimeTrackerContextType {
     startTracking: () => void
     stopTracking: () => Promise<void>
     changeComment: (id: number, comment: string) => void
+    saveComment: (id: number) => Promise<void>
 }
 
 const TimeTrackerContext = createContext<TimeTrackerContextType | null>(null)
@@ -79,11 +80,23 @@ export function TimeTrackerProvider() {
         }
     };
 
-    const handleCommentChange = (id: number, comment: string) => {
+    function handleCommentChange(id: number, comment: string) {
         setTimeEntries(prevEntries =>
             prevEntries.map(entry => (entry.id === id ? { ...entry, comment, hasCommentUpdate: true } : entry))
-        );
-    };
+        )
+    }
+
+    async function saveComment(id: number) {
+        for (const entry of timeEntries) {
+            if (entry.id != id) {
+                continue
+            }
+            console.log("updating " + entry.id + " with comment: " + entry.comment)
+        }
+        setTimeEntries(prevEntries =>
+            prevEntries.map(entry => (entry.id === id ? { ...entry, hasCommentUpdate: false } : entry))
+        )
+    }
 
     async function fetchData() {
         setLoading(true)
@@ -115,7 +128,7 @@ export function TimeTrackerProvider() {
     }, [selectedCustomer])
 
     return (
-        <TimeTrackerContext.Provider value={{ timeEntries: timeEntries, elapsedTime, isTracking, startTracking: handleStartTracking, stopTracking: handleStopTracking, changeComment: handleCommentChange }}>
+        <TimeTrackerContext.Provider value={{ timeEntries: timeEntries, elapsedTime, isTracking, startTracking: handleStartTracking, stopTracking: handleStopTracking, changeComment: handleCommentChange, saveComment }}>
             {loading ? <></> : <Outlet />}
         </TimeTrackerContext.Provider>
     )
