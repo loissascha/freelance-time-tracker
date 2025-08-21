@@ -5,7 +5,7 @@ import { GetCustomerTimes } from "../../wailsjs/go/customerhandler/CustomerHandl
 
 interface TimeEntry {
     id: number;
-    customerName: string;
+    customerId: number;
     startTime: Date;
     endTime: Date | null;
     comment: string;
@@ -13,6 +13,11 @@ interface TimeEntry {
 
 interface TimeTrackerContextType {
     timeEntries: TimeEntry[]
+    elapsedTime: number
+    isTracking: boolean
+    startTracking: () => void
+    stopTracking: () => void
+    changeComment: (id: number, comment: string) => void
 }
 
 const TimeTrackerContext = createContext<TimeTrackerContextType | null>(null)
@@ -29,6 +34,53 @@ export function TimeTrackerProvider() {
     const { selectedCustomer } = useCustomer()
     const [loading, setLoading] = useState(true)
     const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([])
+    const [isTracking, setIsTracking] = useState(false);
+    const [activeEntry, setActiveEntry] = useState<TimeEntry | null>(null);
+    const [elapsedTime, setElapsedTime] = useState(0);
+
+    useEffect(() => {
+        let timer: number;
+        if (isTracking && activeEntry) {
+            timer = setInterval(() => {
+                setElapsedTime(Math.floor((new Date().getTime() - activeEntry.startTime.getTime()) / 1000));
+            }, 1000);
+        }
+        return () => clearInterval(timer);
+    }, [isTracking, activeEntry]);
+
+    function handleStartTracking() {
+        if (!selectedCustomer) {
+            alert('Please select a customer first.');
+            return;
+        }
+        const newEntry: TimeEntry = {
+            id: Date.now(),
+            customerId: selectedCustomer,
+            startTime: new Date(),
+            endTime: null,
+            comment: '',
+        };
+        setActiveEntry(newEntry);
+        setIsTracking(true);
+    };
+
+    function handleStopTracking() {
+        if (activeEntry) {
+            const now = new Date();
+            const updatedEntry = { ...activeEntry, endTime: now };
+            // TODO: create entry in database!
+            setTimeEntries(prevEntries => [updatedEntry, ...prevEntries]);
+            setIsTracking(false);
+            setActiveEntry(null);
+            setElapsedTime(0);
+        }
+    };
+
+    const handleCommentChange = (id: number, comment: string) => {
+        setTimeEntries(prevEntries =>
+            prevEntries.map(entry => (entry.id === id ? { ...entry, comment } : entry))
+        );
+    };
 
     async function fetchData() {
         setLoading(true)
@@ -38,7 +90,6 @@ export function TimeTrackerProvider() {
             return
         }
         const entries = await GetCustomerTimes(selectedCustomer)
-        console.log("entries:", entries)
         const newEntries: TimeEntry[] = []
         if (entries) {
             for (const entry of entries) {
@@ -54,7 +105,7 @@ export function TimeTrackerProvider() {
     }, [selectedCustomer])
 
     return (
-        <TimeTrackerContext.Provider value={{ timeEntries: timeEntries }}>
+        <TimeTrackerContext.Provider value={{ timeEntries: timeEntries, elapsedTime, isTracking, startTracking: handleStartTracking, stopTracking: handleStopTracking, changeComment: handleCommentChange }}>
             {loading ? <></> : <Outlet />}
         </TimeTrackerContext.Provider>
     )

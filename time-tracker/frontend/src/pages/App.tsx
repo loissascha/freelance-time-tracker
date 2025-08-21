@@ -1,71 +1,13 @@
-import { useState, useEffect } from 'react';
 import { Select } from '@base-ui-components/react';
 import styles from "../styles/baseuiselect.module.css"
 import { Link } from 'react-router';
 import { useCustomer } from '../context/CustomerContext';
 import { MainButton, RedButton } from '../components/Button';
-
-interface TimeEntry {
-    id: number;
-    customerName: string;
-    startTime: Date;
-    endTime: Date | null;
-    comment: string;
-}
+import { useTimeTracker } from '../context/TimeTrackerContext';
 
 function App() {
     const { customers, selectedCustomer, setSelectedCustomer } = useCustomer()
-    const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
-    const [isTracking, setIsTracking] = useState(false);
-    const [activeEntry, setActiveEntry] = useState<TimeEntry | null>(null);
-    const [elapsedTime, setElapsedTime] = useState(0);
-
-    useEffect(() => {
-        let timer: number;
-        if (isTracking && activeEntry) {
-            timer = setInterval(() => {
-                setElapsedTime(Math.floor((new Date().getTime() - activeEntry.startTime.getTime()) / 1000));
-            }, 1000);
-        }
-        return () => clearInterval(timer);
-    }, [isTracking, activeEntry]);
-
-    const handleStartTracking = () => {
-        if (!selectedCustomer) {
-            alert('Please select a customer first.');
-            return;
-        }
-        const customer = customers.find(c => c.value === selectedCustomer);
-        if (customer) {
-            const newEntry: TimeEntry = {
-                id: Date.now(),
-                customerName: customer.label,
-                startTime: new Date(),
-                endTime: null,
-                comment: '',
-            };
-            setActiveEntry(newEntry);
-            setIsTracking(true);
-        }
-    };
-
-    const handleStopTracking = () => {
-        if (activeEntry) {
-            const now = new Date();
-            const updatedEntry = { ...activeEntry, endTime: now };
-            // TODO: create entry in database!
-            setTimeEntries(prevEntries => [updatedEntry, ...prevEntries]);
-            setIsTracking(false);
-            setActiveEntry(null);
-            setElapsedTime(0);
-        }
-    };
-
-    const handleCommentChange = (id: number, comment: string) => {
-        setTimeEntries(prevEntries =>
-            prevEntries.map(entry => (entry.id === id ? { ...entry, comment } : entry))
-        );
-    };
+    const { timeEntries, elapsedTime, isTracking, startTracking, stopTracking, changeComment } = useTimeTracker()
 
     const formatTime = (date: Date) => {
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -135,8 +77,8 @@ function App() {
                             </div>
                         )}
                         {isTracking ?
-                            <RedButton onClick={handleStopTracking} disabled={!selectedCustomer}>Stop Tracking</RedButton> :
-                            <MainButton onClick={handleStartTracking} disabled={!selectedCustomer}>Start Tracking</MainButton>
+                            <RedButton onClick={stopTracking} disabled={!selectedCustomer}>Stop Tracking</RedButton> :
+                            <MainButton onClick={startTracking} disabled={!selectedCustomer}>Start Tracking</MainButton>
                         }
                     </div>
                 </div>
@@ -148,7 +90,7 @@ function App() {
                             timeEntries.map(entry => (
                                 <div key={entry.id} className="bg-gray-700 p-4 rounded-md flex flex-wrap items-center justify-between gap-4">
                                     <div className="flex-grow">
-                                        <p className="font-bold text-lg">{entry.customerName}</p>
+                                        <p className="font-bold text-lg">{entry.customerId}</p>
                                         <p className="text-sm text-gray-400">
                                             {entry.startTime.toLocaleDateString()} | {formatTime(entry.startTime)} - {entry.endTime ? formatTime(entry.endTime) : 'Now'}
                                         </p>
@@ -160,7 +102,7 @@ function App() {
                                         type="text"
                                         placeholder="Add a comment..."
                                         value={entry.comment}
-                                        onChange={(e) => handleCommentChange(entry.id, e.target.value)}
+                                        onChange={(e) => changeComment(entry.id, e.target.value)}
                                         className="bg-gray-600 border border-gray-500 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow min-w-[200px]"
                                     />
                                 </div>
