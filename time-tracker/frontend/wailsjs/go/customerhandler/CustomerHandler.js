@@ -10,6 +10,10 @@ export function DeleteCustomer(arg1) {
   return window['go']['customerhandler']['CustomerHandler']['DeleteCustomer'](arg1);
 }
 
+export function GetCustomerTimes(arg1) {
+  return window['go']['customerhandler']['CustomerHandler']['GetCustomerTimes'](arg1);
+}
+
 export function GetCustomers() {
   return window['go']['customerhandler']['CustomerHandler']['GetCustomers']();
 }

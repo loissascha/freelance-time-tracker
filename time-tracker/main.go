@@ -8,6 +8,7 @@ import (
 	"time-tracker/internal/handler/apphandler"
 	"time-tracker/internal/handler/customerhandler"
 	"time-tracker/internal/repositories/customerrepository"
+	"time-tracker/internal/repositories/trackedtimesrepository"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -27,13 +28,14 @@ func main() {
 
 	// repositories
 	customerRepo := customerrepository.New(database)
+	trackedTimeRepo := trackedtimesrepository.New(database)
 
 	customers, err := customerRepo.ListCustomers()
 	fmt.Println("customers:", customers)
 
 	// handlers
 	appHandler = apphandler.NewApp()
-	customerHandler = customerhandler.NewCustomerHandler(customerRepo)
+	customerHandler = customerhandler.NewCustomerHandler(customerRepo, trackedTimeRepo)
 
 	// Create application with options
 	err = wails.Run(&options.App{
