@@ -6,6 +6,7 @@ import { HashRouter, Route, Routes } from 'react-router'
 import Layout from './layouts/Layout'
 import ManageCustomers from './pages/ManageCustomers'
 import { CustomerProvider } from './context/CustomerContext'
+import { TimeTrackerProvider } from './context/TimeTrackerContext'
 
 const container = document.getElementById('root')
 
@@ -16,9 +17,11 @@ root.render(
         <HashRouter>
             <Routes>
                 <Route element={<CustomerProvider />}>
-                    <Route element={<Layout />}>
-                        <Route index path='/' element={<App />} />
-                        <Route path='/manage-customers' element={<ManageCustomers />} />
+                    <Route element={<TimeTrackerProvider />}>
+                        <Route element={<Layout />}>
+                            <Route index path='/' element={<App />} />
+                            <Route path='/manage-customers' element={<ManageCustomers />} />
+                        </Route>
                     </Route>
                 </Route>
             </Routes>
