@@ -1,6 +1,7 @@
 package customerrepository
 
 import (
+	"fmt"
 	"time-tracker/internal/db"
 	"time-tracker/internal/entities"
 )
@@ -16,7 +17,7 @@ func New(db *db.Db) *CustomerRepository {
 }
 
 func (r *CustomerRepository) ListCustomers() ([]entities.Customer, error) {
-	selectSql := `SELECT id, name FROM customers ORDER BY id`
+	selectSql := `SELECT id, name FROM customers WHERE deleted=false ORDER BY id`
 	rows, err := r.db.Db.Query(selectSql)
 	if err != nil {
 		return nil, err
@@ -33,6 +34,24 @@ func (r *CustomerRepository) ListCustomers() ([]entities.Customer, error) {
 	}
 
 	return customers, nil
+}
+
+func (r *CustomerRepository) DeleteCustomer(id int64) error {
+	deleteSql := `UPDATE customers SET deleted=true WHERE id=?`
+
+	res, err := r.db.Db.Exec(deleteSql, id)
+	if err != nil {
+		return err
+	}
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affectedRows == 0 {
+		return fmt.Errorf("Could not find a customer with the given id.")
+	}
+
+	return nil
 }
 
 func (r *CustomerRepository) AddCustomer(name string) (int64, error) {
@@ -63,4 +82,3 @@ func (r *CustomerRepository) AddCustomer(name string) (int64, error) {
 
 	return id, tx.Commit()
 }
-

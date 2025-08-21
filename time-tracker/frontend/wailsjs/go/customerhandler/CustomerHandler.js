@@ -6,6 +6,10 @@ export function AddCustomer(arg1) {
   return window['go']['customerhandler']['CustomerHandler']['AddCustomer'](arg1);
 }
 
+export function DeleteCustomer(arg1) {
+  return window['go']['customerhandler']['CustomerHandler']['DeleteCustomer'](arg1);
+}
+
 export function GetCustomers() {
   return window['go']['customerhandler']['CustomerHandler']['GetCustomers']();
 }

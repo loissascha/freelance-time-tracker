@@ -4,4 +4,6 @@ import {entities} from '../models';
 
 export function AddCustomer(arg1:string):Promise<boolean>;
 
+export function DeleteCustomer(arg1:number):Promise<boolean>;
+
 export function GetCustomers():Promise<Array<entities.Customer>>;

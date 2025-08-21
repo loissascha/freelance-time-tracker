@@ -34,3 +34,11 @@ func (h *CustomerHandler) AddCustomer(name string) bool {
 	}
 	return true
 }
+
+func (h *CustomerHandler) DeleteCustomer(id int64) bool {
+	err := h.customerRepo.DeleteCustomer(id)
+	if err != nil {
+		return false
+	}
+	return true
+}
