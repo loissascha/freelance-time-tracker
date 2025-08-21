@@ -54,6 +54,7 @@ function App() {
         if (activeEntry) {
             const now = new Date();
             const updatedEntry = { ...activeEntry, endTime: now };
+            // TODO: create entry in database!
             setTimeEntries(prevEntries => [updatedEntry, ...prevEntries]);
             setIsTracking(false);
             setActiveEntry(null);
