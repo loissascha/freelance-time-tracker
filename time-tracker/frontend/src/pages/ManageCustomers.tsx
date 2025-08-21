@@ -7,12 +7,18 @@ import BackspaceIcon from "../components/icons/BackspaceIcon";
 import ExportIcon from "../components/icons/ExportIcon";
 
 export default function () {
-    const { customers, addCustomer } = useCustomer()
+    const { customers, addCustomer, deleteCustomer } = useCustomer()
     const [newCustomerName, setNewCustomerName] = useState("")
 
     async function addCustomerFormSubmit(e: any) {
         e.preventDefault()
         await addCustomer(newCustomerName)
+    }
+
+    async function deleteCustomerButton(id: number) {
+        if (confirm("Would you really like to delete this customer?")) {
+            await deleteCustomer(id)
+        }
     }
 
     return (
@@ -46,7 +52,9 @@ export default function () {
                                 <div className="grow">{customer.label}</div>
                                 <div className="flex gap-1">
                                     <ExportIcon />
-                                    <BackspaceIcon className="text-red-500" />
+                                    <button className="cursor-pointer" onClick={() => deleteCustomerButton(customer.value)}>
+                                        <BackspaceIcon className="text-red-500" />
+                                    </button>
                                 </div>
                             </div>
                         ))}
