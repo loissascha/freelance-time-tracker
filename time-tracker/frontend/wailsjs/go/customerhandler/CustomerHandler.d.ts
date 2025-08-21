@@ -12,3 +12,5 @@ export function DeleteCustomer(arg1:number):Promise<boolean>;
 export function GetCustomerTimes(arg1:number):Promise<Array<entities.TrackedTime>>;
 
 export function GetCustomers():Promise<Array<entities.Customer>>;
+
+export function UpdateCustomerTimeComment(arg1:number,arg2:string):Promise<void>;

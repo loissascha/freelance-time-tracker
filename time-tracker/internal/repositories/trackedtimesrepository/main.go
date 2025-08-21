@@ -1,6 +1,7 @@
 package trackedtimesrepository
 
 import (
+	"fmt"
 	"time"
 	"time-tracker/internal/db"
 	"time-tracker/internal/entities"
@@ -43,6 +44,22 @@ func (r *TrackedTimesRepository) AddTime(id int64, customerId int64, startTime t
 	}
 
 	return insertId, tx.Commit()
+}
+
+func (r *TrackedTimesRepository) UpdateTimeComment(id int64, comment string) error {
+	updateSql := `UPDATE tracked_times SET comment=? WHERE id=?`
+	res, err := r.db.Db.Exec(updateSql, comment, id)
+	if err != nil {
+		return err
+	}
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affectedRows == 0 {
+		return fmt.Errorf("No rows affected!")
+	}
+	return nil
 }
 
 func (r *TrackedTimesRepository) GetTimesForCustomer(customerId int64) ([]entities.TrackedTime, error) {

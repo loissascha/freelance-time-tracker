@@ -21,3 +21,7 @@ export function GetCustomerTimes(arg1) {
 export function GetCustomers() {
   return window['go']['customerhandler']['CustomerHandler']['GetCustomers']();
 }
+
+export function UpdateCustomerTimeComment(arg1, arg2) {
+  return window['go']['customerhandler']['CustomerHandler']['UpdateCustomerTimeComment'](arg1, arg2);
+}

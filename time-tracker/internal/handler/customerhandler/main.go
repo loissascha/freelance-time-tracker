@@ -38,6 +38,13 @@ func (h *CustomerHandler) AddCustomerTime(id int64, customerId int64, startTime 
 	return true
 }
 
+func (h *CustomerHandler) UpdateCustomerTimeComment(id int64, comment string) {
+	err := h.timeRepo.UpdateTimeComment(id, comment)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func (h *CustomerHandler) GetCustomerTimes(customerId int64) []entities.TrackedTime {
 	times, err := h.timeRepo.GetTimesForCustomer(customerId)
 	if err != nil {

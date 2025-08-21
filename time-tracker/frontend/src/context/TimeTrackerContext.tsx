@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { Outlet } from "react-router"
 import { useCustomer } from "./CustomerContext"
-import { GetCustomerTimes, AddCustomerTime } from "../../wailsjs/go/customerhandler/CustomerHandler"
+import { GetCustomerTimes, AddCustomerTime, UpdateCustomerTimeComment } from "../../wailsjs/go/customerhandler/CustomerHandler"
 
 interface TimeEntry {
     id: number;
@@ -91,7 +91,7 @@ export function TimeTrackerProvider() {
             if (entry.id != id) {
                 continue
             }
-            console.log("updating " + entry.id + " with comment: " + entry.comment)
+            await UpdateCustomerTimeComment(entry.id, entry.comment)
         }
         setTimeEntries(prevEntries =>
             prevEntries.map(entry => (entry.id === id ? { ...entry, hasCommentUpdate: false } : entry))
