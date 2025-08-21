@@ -5,7 +5,7 @@ CREATE TABLE tracked_times (
     "customer_id" INTEGER NOT NULL,
     "startTime" DATETIME NOT NULL,
     "endTime" DATETIME NOT NULL,
-    "comment" TEXT,
+    "comment" TEXT NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customers (id)
 );
 CREATE INDEX idx_tracked_times_customer_id ON tracked_times (customer_id);

@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { Outlet } from "react-router"
 import { useCustomer } from "./CustomerContext"
-import { GetCustomerTimes } from "../../wailsjs/go/customerhandler/CustomerHandler"
+import { GetCustomerTimes, AddCustomerTime } from "../../wailsjs/go/customerhandler/CustomerHandler"
 
 interface TimeEntry {
     id: number;
@@ -16,7 +16,7 @@ interface TimeTrackerContextType {
     elapsedTime: number
     isTracking: boolean
     startTracking: () => void
-    stopTracking: () => void
+    stopTracking: () => Promise<void>
     changeComment: (id: number, comment: string) => void
 }
 
@@ -64,11 +64,12 @@ export function TimeTrackerProvider() {
         setIsTracking(true);
     };
 
-    function handleStopTracking() {
+    async function handleStopTracking() {
         if (activeEntry) {
             const now = new Date();
             const updatedEntry = { ...activeEntry, endTime: now };
             // TODO: create entry in database!
+            await AddCustomerTime(updatedEntry.id, updatedEntry.customerId, updatedEntry.startTime, updatedEntry.endTime)
             setTimeEntries(prevEntries => [updatedEntry, ...prevEntries]);
             setIsTracking(false);
             setActiveEntry(null);
@@ -93,7 +94,13 @@ export function TimeTrackerProvider() {
         const newEntries: TimeEntry[] = []
         if (entries) {
             for (const entry of entries) {
-                console.log(entry)
+                newEntries.push({
+                    id: entry.id,
+                    customerId: entry.customer_id,
+                    comment: entry.comment,
+                    startTime: new Date(entry.startTime),
+                    endTime: new Date(entry.endTime)
+                })
             }
         }
         setTimeEntries(newEntries)

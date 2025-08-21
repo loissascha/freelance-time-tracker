@@ -17,7 +17,7 @@ func New(db *db.Db) *TrackedTimesRepository {
 }
 
 func (r *TrackedTimesRepository) AddTime(id int64, customerId int64, startTime time.Time, endTime time.Time) (int64, error) {
-	insertSql := `INSERT INTO tracked_times (id, customer_id, startTime, endTime) VALUES (?, ?, ?, ?)`
+	insertSql := `INSERT INTO tracked_times (id, customer_id, startTime, endTime, comment) VALUES (?, ?, ?, ?, ?)`
 
 	tx, err := r.db.Db.Begin()
 	if err != nil {
@@ -30,7 +30,7 @@ func (r *TrackedTimesRepository) AddTime(id int64, customerId int64, startTime t
 	}
 	defer stmt.Close()
 
-	result, err := stmt.Exec(id, customerId, startTime, endTime)
+	result, err := stmt.Exec(id, customerId, startTime, endTime, "")
 	if err != nil {
 		tx.Rollback()
 		return 0, err

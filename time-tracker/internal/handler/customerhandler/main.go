@@ -2,6 +2,8 @@ package customerhandler
 
 import (
 	"context"
+	"fmt"
+	"time"
 	"time-tracker/internal/entities"
 	"time-tracker/internal/repositories/customerrepository"
 	"time-tracker/internal/repositories/trackedtimesrepository"
@@ -28,11 +30,20 @@ func (h *CustomerHandler) GetCustomers() []entities.Customer {
 	return customers
 }
 
+func (h *CustomerHandler) AddCustomerTime(id int64, customerId int64, startTime time.Time, endTime time.Time) bool {
+	_, err := h.timeRepo.AddTime(id, customerId, startTime, endTime)
+	if err != nil {
+		panic(err)
+	}
+	return true
+}
+
 func (h *CustomerHandler) GetCustomerTimes(customerId int64) []entities.TrackedTime {
 	times, err := h.timeRepo.GetTimesForCustomer(customerId)
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println("Customer times:", times)
 	return times
 }
 

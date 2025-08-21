@@ -17,10 +17,8 @@ export namespace entities {
 	export class TrackedTime {
 	    id: number;
 	    customer_id: number;
-	    // Go type: time
-	    startTime: any;
-	    // Go type: time
-	    endTime: any;
+	    startTime: time.Time;
+	    endTime: time.Time;
 	    comment: string;
 	
 	    static createFrom(source: any = {}) {
@@ -31,8 +29,8 @@ export namespace entities {
 	        if ('string' === typeof source) source = JSON.parse(source);
 	        this.id = source["id"];
 	        this.customer_id = source["customer_id"];
-	        this.startTime = this.convertValues(source["startTime"], null);
-	        this.endTime = this.convertValues(source["endTime"], null);
+	        this.startTime = this.convertValues(source["startTime"], time.Time);
+	        this.endTime = this.convertValues(source["endTime"], time.Time);
 	        this.comment = source["comment"];
 	    }
 	
@@ -53,6 +51,23 @@ export namespace entities {
 		    }
 		    return a;
 		}
+	}
+
+}
+
+export namespace time {
+	
+	export class Time {
+	
+	
+	    static createFrom(source: any = {}) {
+	        return new Time(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	
+	    }
 	}
 
 }
