@@ -4,6 +4,9 @@ import (
 	"database/sql"
 	"embed"
 	"fmt"
+	"os"
+	"path/filepath"
+
 	"github.com/pressly/goose/v3"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -17,7 +20,21 @@ type Db struct {
 }
 
 func InitDb() *Db {
-	dbFileName := "tracker.db"
+	appName := "timeTracker"
+
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		panic(err)
+	}
+
+	appDataDir := filepath.Join(configDir, appName)
+
+	err = os.MkdirAll(appDataDir, 0755)
+	if err != nil {
+		panic(err)
+	}
+
+	dbFileName := filepath.Join(appDataDir, "tracker.db")
 
 	db, err := sql.Open("sqlite3", dbFileName)
 	if err != nil {

@@ -35,8 +35,10 @@ export function CustomerProvider() {
         setLoading(true)
         const newCustomers: Customer[] = []
         const res = await GetCustomers()
-        for (var c of res) {
-            newCustomers.push({ label: c.name, value: c.id })
+        if (res) {
+            for (var c of res) {
+                newCustomers.push({ label: c.name, value: c.id })
+            }
         }
         setCustomers(newCustomers)
         setLoading(false)
