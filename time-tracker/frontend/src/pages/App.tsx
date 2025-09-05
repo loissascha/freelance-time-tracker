@@ -58,7 +58,7 @@ function App() {
             <main>
                 <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8 flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <label htmlFor="customer-select" className="text-lg">Customer:</label>
+                        <label htmlFor="customer-select" className="text-lg">Customer / Project:</label>
                         <Select.Root items={customers} value={selectedCustomer} onValueChange={(value) => setSelectedCustomer(value)}>
                             <Select.Trigger className={styles.Select}>
                                 <Select.Value />
