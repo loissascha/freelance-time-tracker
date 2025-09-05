@@ -81,12 +81,16 @@ func (h *CustomerHandler) DeleteCustomer(id int64) bool {
 }
 
 func (h *CustomerHandler) ExportCustomer(customerId int64) {
+	name, err := h.customerRepo.GetCustomerName(customerId)
+	if err != nil {
+		panic(err)
+	}
 	times, err := h.timeRepo.GetTimesForCustomer(customerId)
 	if err != nil {
 		panic(err)
 	}
 	fmt.Println("Found", len(times), "customers for export")
-	filename := fmt.Sprintf("export_customer_%v.csv", customerId)
+	filename := fmt.Sprintf("export_customer_%v.csv", name)
 	appName := "timeTracker"
 	configDir, err := os.UserConfigDir()
 	if err != nil {

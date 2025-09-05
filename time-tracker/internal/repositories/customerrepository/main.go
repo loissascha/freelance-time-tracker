@@ -36,6 +36,26 @@ func (r *CustomerRepository) ListCustomers() ([]entities.Customer, error) {
 	return customers, nil
 }
 
+func (r *CustomerRepository) GetCustomerName(id int64) (string, error) {
+	selectSql := `SELECT name FROM customers WHERE id=?`
+	rows, err := r.db.Db.Query(selectSql, id)
+	if err != nil {
+		return "", err
+	}
+	defer rows.Close()
+
+	type CustomerName struct {
+		Name string `json:"name"`
+	}
+	var cname CustomerName
+	for rows.Next() {
+		if err := rows.Scan(&cname.Name); err != nil {
+			return "", err
+		}
+	}
+	return cname.Name, nil
+}
+
 func (r *CustomerRepository) DeleteCustomer(id int64) error {
 	deleteSql := `UPDATE customers SET deleted=true WHERE id=?`
 
