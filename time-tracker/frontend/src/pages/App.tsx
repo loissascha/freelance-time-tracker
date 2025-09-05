@@ -6,7 +6,7 @@ import { MainButton, RedButton } from '../components/Button';
 import { useTimeTracker } from '../context/TimeTrackerContext';
 import SaveIcon from '../components/icons/SaveIcon';
 import { useState } from 'react';
-import { DeleteTime } from '../../wailsjs/go/customerhandler/CustomerHandler';
+import { DeleteTime, ExportCustomer } from '../../wailsjs/go/customerhandler/CustomerHandler';
 
 function App() {
     const { customers, selectedCustomer, setSelectedCustomer } = useCustomer()
@@ -38,6 +38,13 @@ function App() {
         await DeleteTime(askDelete)
         setAskDelete(0)
         await reloadTimeEntries()
+    }
+
+    async function exportButton() {
+        if (!selectedCustomer) return
+        console.log("exporting customer", selectedCustomer)
+        await ExportCustomer(selectedCustomer)
+		alert("Export erfolgreich!")
     }
 
     return (
@@ -112,7 +119,11 @@ function App() {
                 <div className="bg-gray-800 rounded-lg shadow-lg p-6">
                     <div className='mb-4 flex justify-between items-center'>
                         <h2 className="text-2xl font-bold mb-4">Time Log</h2>
-                        <button className='bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded'>Export</button>
+                        {selectedCustomer ? (
+                            <button className='bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded cursor-pointer' onClick={() => {
+                                exportButton()
+                            }}>Export</button>
+                        ) : null}
                     </div>
                     <div className="space-y-4">
                         {timeEntries.length > 0 ? (

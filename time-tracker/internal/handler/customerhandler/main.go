@@ -2,7 +2,10 @@ package customerhandler
 
 import (
 	"context"
+	"encoding/csv"
 	"fmt"
+	"os"
+	"path/filepath"
 	"time"
 	"time-tracker/internal/entities"
 	"time-tracker/internal/repositories/customerrepository"
@@ -75,4 +78,77 @@ func (h *CustomerHandler) DeleteCustomer(id int64) bool {
 		return false
 	}
 	return true
+}
+
+func (h *CustomerHandler) ExportCustomer(customerId int64) {
+	times, err := h.timeRepo.GetTimesForCustomer(customerId)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("Found", len(times), "customers for export")
+	filename := fmt.Sprintf("export_customer_%v.csv", customerId)
+	appName := "timeTracker"
+	configDir, err := os.UserConfigDir()
+	if err != nil {
+		panic(err)
+	}
+	filePath := filepath.Join(configDir, appName, filename)
+	fmt.Println("Filepath to install to:", filePath)
+	file, err := os.Create(filePath)
+	if err != nil {
+		fmt.Println(err)
+		panic("failed to create file")
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	fmt.Println("created writer")
+
+	type TimeEntry struct {
+		StartTime string `json:"startTime"`
+		EndTime   string `json:"endTime"`
+		Duration  string `json:"duration"`
+		Comment   string `json:"comment"`
+	}
+
+	header := []string{"Start Zeit", "End Zeit", "Dauer", "Comment"}
+	if err := writer.Write(header); err != nil {
+		panic(err)
+	}
+
+	fmt.Println("header written")
+	const myTimeLayout = "02.01.2006 15:04"
+
+	for _, t := range times {
+		startTime, err := time.Parse(time.RFC3339Nano, t.StartTime)
+		if err != nil {
+			panic(err)
+		}
+		endTime, err := time.Parse(time.RFC3339Nano, t.EndTime)
+		if err != nil {
+			panic(err)
+		}
+		duration := endTime.Sub(startTime)
+		if duration.Minutes() < 1 {
+			continue
+		}
+		minutes := int(duration.Minutes())
+		hours := 0
+		if minutes > 60 {
+			hours = minutes / 60
+			minutes = minutes % 60
+		}
+		entry := []string{
+			startTime.Local().Format(myTimeLayout),
+			endTime.Local().Format(myTimeLayout),
+			fmt.Sprintf("%02d:%02d", hours, minutes),
+			t.Comment,
+		}
+		fmt.Println("writing entry", entry)
+		if err := writer.Write(entry); err != nil {
+			panic(err)
+		}
+	}
 }
