@@ -47,9 +47,12 @@ function App() {
                     <h1 className="text-4xl font-bold text-gray-100">Time Tracker</h1>
                     <p className="text-gray-400">Track your work with ease.</p>
                 </div>
-                <Link to="/manage-customers" className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
-                    Manage Customers
-                </Link>
+                <div className='flex gap-2'>
+                    <button className='bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded'>Export</button>
+                    <Link to="/manage-customers" className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                        Manage Customers
+                    </Link>
+                </div>
             </header>
 
             <main>
