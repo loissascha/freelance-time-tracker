@@ -14,6 +14,10 @@ export function DeleteCustomer(arg1) {
   return window['go']['customerhandler']['CustomerHandler']['DeleteCustomer'](arg1);
 }
 
+export function DeleteTime(arg1) {
+  return window['go']['customerhandler']['CustomerHandler']['DeleteTime'](arg1);
+}
+
 export function GetCustomerTimes(arg1) {
   return window['go']['customerhandler']['CustomerHandler']['GetCustomerTimes'](arg1);
 }

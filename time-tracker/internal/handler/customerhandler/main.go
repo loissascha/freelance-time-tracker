@@ -38,6 +38,13 @@ func (h *CustomerHandler) AddCustomerTime(id int64, customerId int64, startTime 
 	return true
 }
 
+func (h *CustomerHandler) DeleteTime(id int64) {
+	err := h.timeRepo.DeleteTime(id)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func (h *CustomerHandler) UpdateCustomerTimeComment(id int64, comment string) {
 	err := h.timeRepo.UpdateTimeComment(id, comment)
 	if err != nil {

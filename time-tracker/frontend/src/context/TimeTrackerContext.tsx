@@ -20,6 +20,7 @@ interface TimeTrackerContextType {
     stopTracking: () => Promise<void>
     changeComment: (id: number, comment: string) => void
     saveComment: (id: number) => Promise<void>
+    reloadTimeEntries: () => Promise<void>
 }
 
 const TimeTrackerContext = createContext<TimeTrackerContextType | null>(null)
@@ -128,7 +129,7 @@ export function TimeTrackerProvider() {
     }, [selectedCustomer])
 
     return (
-        <TimeTrackerContext.Provider value={{ timeEntries: timeEntries, elapsedTime, isTracking, startTracking: handleStartTracking, stopTracking: handleStopTracking, changeComment: handleCommentChange, saveComment }}>
+        <TimeTrackerContext.Provider value={{ reloadTimeEntries: fetchData, timeEntries: timeEntries, elapsedTime, isTracking, startTracking: handleStartTracking, stopTracking: handleStopTracking, changeComment: handleCommentChange, saveComment }}>
             {loading ? <></> : <Outlet />}
         </TimeTrackerContext.Provider>
     )

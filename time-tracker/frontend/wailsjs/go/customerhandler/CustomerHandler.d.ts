@@ -9,6 +9,8 @@ export function AddCustomerTime(arg1:number,arg2:number,arg3:time.Time,arg4:time
 
 export function DeleteCustomer(arg1:number):Promise<boolean>;
 
+export function DeleteTime(arg1:number):Promise<void>;
+
 export function GetCustomerTimes(arg1:number):Promise<Array<entities.TrackedTime>>;
 
 export function GetCustomers():Promise<Array<entities.Customer>>;

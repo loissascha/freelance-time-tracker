@@ -46,6 +46,15 @@ func (r *TrackedTimesRepository) AddTime(id int64, customerId int64, startTime t
 	return insertId, tx.Commit()
 }
 
+func (r *TrackedTimesRepository) DeleteTime(id int64) error {
+	deleteSql := `DELETE FROM tracked_times WHERE id=?`
+	_, err := r.db.Db.Exec(deleteSql, id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r *TrackedTimesRepository) UpdateTimeComment(id int64, comment string) error {
 	updateSql := `UPDATE tracked_times SET comment=? WHERE id=?`
 	res, err := r.db.Db.Exec(updateSql, comment, id)

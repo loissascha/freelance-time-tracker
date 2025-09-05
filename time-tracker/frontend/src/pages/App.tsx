@@ -5,10 +5,13 @@ import { useCustomer } from '../context/CustomerContext';
 import { MainButton, RedButton } from '../components/Button';
 import { useTimeTracker } from '../context/TimeTrackerContext';
 import SaveIcon from '../components/icons/SaveIcon';
+import { useState } from 'react';
+import { DeleteTime } from '../../wailsjs/go/customerhandler/CustomerHandler';
 
 function App() {
     const { customers, selectedCustomer, setSelectedCustomer } = useCustomer()
-    const { timeEntries, elapsedTime, isTracking, startTracking, stopTracking, changeComment, saveComment } = useTimeTracker()
+    const { timeEntries, elapsedTime, isTracking, startTracking, stopTracking, changeComment, saveComment, reloadTimeEntries } = useTimeTracker()
+    const [askDelete, setAskDelete] = useState(0)
 
     const formatTime = (date: Date) => {
         return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -28,6 +31,13 @@ function App() {
         const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
         const s = (seconds % 60).toString().padStart(2, '0');
         return `${h}:${m}:${s}`;
+    }
+
+    async function callDelete() {
+        if (askDelete == 0) return
+        await DeleteTime(askDelete)
+        setAskDelete(0)
+        await reloadTimeEntries()
     }
 
     return (
@@ -84,6 +94,21 @@ function App() {
                     </div>
                 </div>
 
+                {askDelete > 0 ? (
+                    <div className='absolute top-0 left-0 right-0 bottom-0 bg-black/50'>
+                        <div className='w-full h-full flex items-center justify-center'>
+                            <div className='max-w-3/4 max-h-3/4 overflow-y-auto bg-slate-800 rounded-xl border border-slate-600 p-8 text-center'>
+                                <h1 className='text-3xl font-bold'>For Sure Dude?</h1>
+                                <div className='mt-2'>Do you really want to delete this time entry?</div>
+                                <div className='flex gap-4 justify-center mt-8'>
+                                    <button className='px-8 py-2 bg-green-600 rounded-lg font-bold hover:bg-green-500 cursor-pointer' onClick={() => callDelete()}>Ok</button>
+                                    <button className='cursor-pointer text-neutral-300 hover:text-neutral-100' onClick={() => setAskDelete(0)}>Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ) : null}
+
                 <div className="bg-gray-800 rounded-lg shadow-lg p-6">
                     <h2 className="text-2xl font-bold mb-4">Time Log</h2>
                     <div className="space-y-4">
@@ -98,6 +123,9 @@ function App() {
                                     <div className="text-xl font-semibold w-32 text-center">
                                         {formatDuration(entry.startTime, entry.endTime)}
                                     </div>
+                                    <button className='cursor-pointer text-red-600 hover:text-red-500 font-bold' onClick={() => setAskDelete(entry.id)}>
+                                        X
+                                    </button>
                                     <div className='flex gap-1'>
                                         <input
                                             type="text"
