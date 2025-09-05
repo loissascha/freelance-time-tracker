@@ -47,12 +47,9 @@ function App() {
                     <h1 className="text-4xl font-bold text-gray-100">Time Tracker</h1>
                     <p className="text-gray-400">Track your work with ease.</p>
                 </div>
-                <div className='flex gap-2'>
-                    <button className='bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded'>Export</button>
-                    <Link to="/manage-customers" className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
-                        Manage Customers
-                    </Link>
-                </div>
+                <Link to="/manage-customers" className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                    Manage Customers
+                </Link>
             </header>
 
             <main>
@@ -113,7 +110,10 @@ function App() {
                 ) : null}
 
                 <div className="bg-gray-800 rounded-lg shadow-lg p-6">
-                    <h2 className="text-2xl font-bold mb-4">Time Log</h2>
+                    <div className='mb-4 flex justify-between items-center'>
+                        <h2 className="text-2xl font-bold mb-4">Time Log</h2>
+                        <button className='bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded'>Export</button>
+                    </div>
                     <div className="space-y-4">
                         {timeEntries.length > 0 ? (
                             timeEntries.map(entry => (
