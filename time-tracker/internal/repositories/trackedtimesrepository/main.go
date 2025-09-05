@@ -47,8 +47,8 @@ func (r *TrackedTimesRepository) AddTime(id int64, customerId int64, startTime t
 }
 
 func (r *TrackedTimesRepository) DeleteTime(id int64) error {
-	deleteSql := `DELETE FROM tracked_times WHERE id=?`
-	_, err := r.db.Db.Exec(deleteSql, id)
+	updateSql := `UPDATE tracked_times SET deleted=true WHERE id=?`
+	_, err := r.db.Db.Exec(updateSql, id)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func (r *TrackedTimesRepository) UpdateTimeComment(id int64, comment string) err
 }
 
 func (r *TrackedTimesRepository) GetTimesForCustomer(customerId int64) ([]entities.TrackedTime, error) {
-	selectSql := `SELECT id, startTime, endTime, comment FROM tracked_times WHERE customer_id=? ORDER BY id DESC`
+	selectSql := `SELECT id, startTime, endTime, comment FROM tracked_times WHERE customer_id=? AND deleted=false ORDER BY id DESC`
 	rows, err := r.db.Db.Query(selectSql, customerId)
 	if err != nil {
 		return nil, err

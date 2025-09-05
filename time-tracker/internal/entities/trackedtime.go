@@ -6,4 +6,5 @@ type TrackedTime struct {
 	StartTime  string `json:"startTime"`
 	EndTime    string `json:"endTime"`
 	Comment    string `json:"comment"`
+	Deleted    bool   `json:"deleted"`
 }

@@ -20,6 +20,7 @@ export namespace entities {
 	    startTime: string;
 	    endTime: string;
 	    comment: string;
+	    deleted: boolean;
 	
 	    static createFrom(source: any = {}) {
 	        return new TrackedTime(source);
@@ -32,6 +33,7 @@ export namespace entities {
 	        this.startTime = source["startTime"];
 	        this.endTime = source["endTime"];
 	        this.comment = source["comment"];
+	        this.deleted = source["deleted"];
 	    }
 	}
 
