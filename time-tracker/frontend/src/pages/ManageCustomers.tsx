@@ -36,11 +36,13 @@ export default function () {
             <main>
                 <div className="bg-neutral-800 rounded-lg shadow-lg p-6 mb-8">
                     <h2 className="text-2xl font-bold mb-4">New Customer</h2>
-                    <form onSubmit={addCustomerFormSubmit} className="flex flex-col gap-2">
+                    <form onSubmit={addCustomerFormSubmit} className="flex flex-col gap-1">
                         <label htmlFor="name" className="cursor-pointer text-sm font-semibold">Name</label>
-                        <TextInput id="name" placeholder="Jon Doe" value={newCustomerName} onChange={setNewCustomerName} />
-                        <div className="flex justify-end">
-                            <MainButton>Add</MainButton>
+                        <div className="flex gap-4 w-full">
+                            <TextInput className="grow" id="name" placeholder="Jon Doe" value={newCustomerName} onChange={setNewCustomerName} />
+                            <div className="flex justify-end">
+                                <MainButton>Add</MainButton>
+                            </div>
                         </div>
                     </form>
                 </div>

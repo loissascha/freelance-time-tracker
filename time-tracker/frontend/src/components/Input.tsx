@@ -3,11 +3,12 @@ interface InputProps {
     value?: string
     placeholder?: string
     onChange?: (newValue: string) => void
+    className?: string
 }
-export function TextInput({ id, value, placeholder, onChange }: InputProps) {
+export function TextInput({ id, value, placeholder, className, onChange }: InputProps) {
     return (
         <input id={id} value={value} placeholder={placeholder} onChange={(e) => onChange ? onChange(e.target.value) : null} type="text"
-            className="p-2 rounded-lg bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`p-2 rounded-lg bg-neutral-700 focus:outline-none focus:ring-2 focus:ring-green-600 ${className}`}
         />
     )
 }
