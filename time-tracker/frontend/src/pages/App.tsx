@@ -44,7 +44,7 @@ function App() {
         if (!selectedCustomer) return
         console.log("exporting customer", selectedCustomer)
         await ExportCustomer(selectedCustomer)
-		alert("Export erfolgreich!")
+        alert("Export erfolgreich!")
     }
 
     return (
@@ -54,13 +54,13 @@ function App() {
                     <h1 className="text-4xl font-bold text-gray-100">Time Tracker</h1>
                     <p className="text-gray-400">Track your work with ease.</p>
                 </div>
-                <Link to="/manage-customers" className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded">
+                <Link to="/manage-customers" className="bg-neutral-700 hover:bg-neutral-600 text-white font-bold py-2 px-4 rounded">
                     Manage Customers
                 </Link>
             </header>
 
             <main>
-                <div className="bg-gray-800 rounded-lg shadow-lg p-6 mb-8 flex items-center justify-between">
+                <div className="bg-neutral-800 rounded-lg shadow-lg p-6 mb-8 flex items-center justify-between">
                     <div className="flex items-center gap-4">
                         <label htmlFor="customer-select" className="text-lg">Customer / Project:</label>
                         <Select.Root items={customers} value={selectedCustomer} onValueChange={(value) => setSelectedCustomer(value)}>
@@ -90,7 +90,7 @@ function App() {
                     </div>
                     <div className="flex items-center gap-6">
                         {isTracking && (
-                            <div className="text-3xl font-mono bg-gray-900 px-4 py-2 rounded-md">
+                            <div className="text-3xl font-mono bg-neutral-900 px-4 py-2 rounded-md">
                                 {formatElapsedTime(elapsedTime)}
                             </div>
                         )}
@@ -104,7 +104,7 @@ function App() {
                 {askDelete > 0 ? (
                     <div className='absolute top-0 left-0 right-0 bottom-0 bg-black/50'>
                         <div className='w-full h-full flex items-center justify-center'>
-                            <div className='max-w-3/4 max-h-3/4 overflow-y-auto bg-slate-800 rounded-xl border border-slate-600 p-8 text-center'>
+                            <div className='max-w-3/4 max-h-3/4 overflow-y-auto bg-neutral-800 rounded-xl border border-neutral-600 p-8 text-center'>
                                 <h1 className='text-3xl font-bold'>For Sure Dude?</h1>
                                 <div className='mt-2'>Do you really want to delete this time entry?</div>
                                 <div className='flex gap-4 justify-center mt-8'>
@@ -116,11 +116,11 @@ function App() {
                     </div>
                 ) : null}
 
-                <div className="bg-gray-800 rounded-lg shadow-lg p-6">
+                <div className="bg-neutral-800 rounded-lg shadow-lg p-6">
                     <div className='mb-4 flex justify-between items-center'>
                         <h2 className="text-2xl font-bold mb-4">Time Log</h2>
                         {selectedCustomer ? (
-                            <button className='bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded cursor-pointer' onClick={() => {
+                            <button className='bg-neutral-700 hover:bg-neutral-600 text-white font-bold py-2 px-4 rounded cursor-pointer' onClick={() => {
                                 exportButton()
                             }}>Export</button>
                         ) : null}
@@ -128,7 +128,7 @@ function App() {
                     <div className="space-y-4">
                         {timeEntries.length > 0 ? (
                             timeEntries.map(entry => (
-                                <div key={entry.id} className="bg-gray-700 p-4 rounded-md flex flex-wrap items-center justify-between gap-4">
+                                <div key={entry.id} className="bg-neutral-700 p-4 rounded-md flex flex-wrap items-center justify-between gap-4">
                                     <div className="flex-grow">
                                         <p className="text-sm text-gray-400">
                                             {entry.startTime.toLocaleDateString()} | {formatTime(entry.startTime)} - {entry.endTime ? formatTime(entry.endTime) : 'Now'}
@@ -146,7 +146,7 @@ function App() {
                                             placeholder="Add a comment..."
                                             value={entry.comment}
                                             onChange={(e) => changeComment(entry.id, e.target.value)}
-                                            className="bg-gray-600 border border-gray-500 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow min-w-[200px]"
+                                            className="bg-neutral-600 border border-gray-500 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow min-w-[200px]"
                                         />
                                         {entry.hasCommentUpdate ? (
                                             <button onClick={() => {
