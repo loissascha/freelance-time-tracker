@@ -140,9 +140,9 @@ function App() {
                                         {formatDuration(entry.startTime, entry.endTime)}
                                     </div>
                                     <div className='flex gap-1'>
-                                        <button className='cursor-pointer text-neutral-200 font-bold'>
+                                        <Link to={"/edit/time/" + entry.id} className='cursor-pointer'>
                                             <EditIcon />
-                                        </button>
+                                        </Link>
                                         <button className='cursor-pointer text-red-600 font-bold' onClick={() => setAskDelete(entry.id)}>
                                             <DeleteIcon />
                                         </button>

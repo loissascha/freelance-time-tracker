@@ -7,6 +7,7 @@ import Layout from './layouts/Layout'
 import ManageCustomers from './pages/ManageCustomers'
 import { CustomerProvider } from './context/CustomerContext'
 import { TimeTrackerProvider } from './context/TimeTrackerContext'
+import EditTime from './pages/EditTime'
 
 const container = document.getElementById('root')
 
@@ -21,6 +22,7 @@ root.render(
                         <Route element={<Layout />}>
                             <Route index path='/' element={<App />} />
                             <Route path='/manage-customers' element={<ManageCustomers />} />
+                            <Route path='/edit/time/{id}' element={<EditTime />} />
                         </Route>
                     </Route>
                 </Route>
