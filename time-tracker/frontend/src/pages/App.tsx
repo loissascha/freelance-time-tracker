@@ -7,6 +7,8 @@ import { useTimeTracker } from '../context/TimeTrackerContext';
 import SaveIcon from '../components/icons/SaveIcon';
 import { useState } from 'react';
 import { DeleteTime, ExportCustomer } from '../../wailsjs/go/customerhandler/CustomerHandler';
+import EditIcon from '../components/icons/EditIcon';
+import DeleteIcon from '../components/icons/DeleteIcon';
 
 function App() {
     const { customers, selectedCustomer, setSelectedCustomer } = useCustomer()
@@ -137,12 +139,14 @@ function App() {
                                     <div className="text-xl font-semibold w-32 text-center">
                                         {formatDuration(entry.startTime, entry.endTime)}
                                     </div>
-                                    <button className='cursor-pointer font-bold'>
-                                        Edit
-                                    </button>
-                                    <button className='cursor-pointer text-red-600 hover:text-red-500 font-bold' onClick={() => setAskDelete(entry.id)}>
-                                        X
-                                    </button>
+                                    <div className='flex gap-1'>
+                                        <button className='cursor-pointer text-neutral-200 font-bold'>
+                                            <EditIcon />
+                                        </button>
+                                        <button className='cursor-pointer text-red-600 font-bold' onClick={() => setAskDelete(entry.id)}>
+                                            <DeleteIcon />
+                                        </button>
+                                    </div>
                                     <div className='flex gap-1'>
                                         <input
                                             type="text"
