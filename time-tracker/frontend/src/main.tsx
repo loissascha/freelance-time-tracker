@@ -22,7 +22,7 @@ root.render(
                         <Route element={<Layout />}>
                             <Route index path='/' element={<App />} />
                             <Route path='/manage-customers' element={<ManageCustomers />} />
-                            <Route path='/edit/time/{id}' element={<EditTime />} />
+                            <Route path='/edit/time/:id' element={<EditTime />} />
                         </Route>
                     </Route>
                 </Route>
