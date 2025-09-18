@@ -137,6 +137,9 @@ function App() {
                                     <div className="text-xl font-semibold w-32 text-center">
                                         {formatDuration(entry.startTime, entry.endTime)}
                                     </div>
+                                    <button className='cursor-pointer font-bold'>
+                                        Edit
+                                    </button>
                                     <button className='cursor-pointer text-red-600 hover:text-red-500 font-bold' onClick={() => setAskDelete(entry.id)}>
                                         X
                                     </button>
