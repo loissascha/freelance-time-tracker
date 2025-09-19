@@ -33,3 +33,11 @@ export function GetCustomers() {
 export function UpdateCustomerTimeComment(arg1, arg2) {
   return window['go']['customerhandler']['CustomerHandler']['UpdateCustomerTimeComment'](arg1, arg2);
 }
+
+export function UpdateCustomerTimeEndTime(arg1, arg2) {
+  return window['go']['customerhandler']['CustomerHandler']['UpdateCustomerTimeEndTime'](arg1, arg2);
+}
+
+export function UpdateCustomerTimeStartTime(arg1, arg2) {
+  return window['go']['customerhandler']['CustomerHandler']['UpdateCustomerTimeStartTime'](arg1, arg2);
+}

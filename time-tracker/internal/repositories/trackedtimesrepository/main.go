@@ -71,6 +71,38 @@ func (r *TrackedTimesRepository) UpdateTimeComment(id int64, comment string) err
 	return nil
 }
 
+func (r *TrackedTimesRepository) UpdateTimeStartTime(id int64, startTime time.Time) error {
+	updateSql := `UPDATE tracked_times SET startTime=? WHERE id=?`
+	res, err := r.db.Db.Exec(updateSql, startTime, id)
+	if err != nil {
+		return err
+	}
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affectedRows == 0 {
+		return fmt.Errorf("No rows affected!")
+	}
+	return nil
+}
+
+func (r *TrackedTimesRepository) UpdateTimeEndTime(id int64, endTime time.Time) error {
+	updateSql := `UPDATE tracked_times SET endTime=? WHERE id=?`
+	res, err := r.db.Db.Exec(updateSql, endTime, id)
+	if err != nil {
+		return err
+	}
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+	if affectedRows == 0 {
+		return fmt.Errorf("No rows affected!")
+	}
+	return nil
+}
+
 func (r *TrackedTimesRepository) GetTimesForCustomer(customerId int64) ([]entities.TrackedTime, error) {
 	selectSql := `SELECT id, startTime, endTime, comment FROM tracked_times WHERE customer_id=? AND deleted=false ORDER BY id DESC`
 	rows, err := r.db.Db.Query(selectSql, customerId)

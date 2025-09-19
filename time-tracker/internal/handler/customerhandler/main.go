@@ -55,6 +55,20 @@ func (h *CustomerHandler) UpdateCustomerTimeComment(id int64, comment string) {
 	}
 }
 
+func (h *CustomerHandler) UpdateCustomerTimeStartTime(id int64, startTime time.Time) {
+	err := h.timeRepo.UpdateTimeStartTime(id, startTime)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func (h *CustomerHandler) UpdateCustomerTimeEndTime(id int64, endTime time.Time) {
+	err := h.timeRepo.UpdateTimeEndTime(id, endTime)
+	if err != nil {
+		panic(err)
+	}
+}
+
 func (h *CustomerHandler) GetCustomerTimes(customerId int64) []entities.TrackedTime {
 	times, err := h.timeRepo.GetTimesForCustomer(customerId)
 	if err != nil {
