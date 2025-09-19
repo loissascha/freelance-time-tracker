@@ -10,6 +10,8 @@ interface TimeEntry {
     endTime: Date | null;
     comment: string;
     hasCommentUpdate: boolean
+    hasStartTimeUpdate: boolean
+    hasEndTimeUpdate: boolean
 }
 
 interface TimeTrackerContextType {
@@ -19,6 +21,8 @@ interface TimeTrackerContextType {
     startTracking: () => void
     stopTracking: () => Promise<void>
     changeComment: (id: number, comment: string) => void
+    changeStartTime: (id: number, startTime: string) => void
+    changeEndTime: (id: number, endTime: string) => void
     saveComment: (id: number) => Promise<void>
     reloadTimeEntries: () => Promise<void>
 }
@@ -62,7 +66,9 @@ export function TimeTrackerProvider() {
             startTime: new Date(),
             endTime: null,
             comment: '',
-            hasCommentUpdate: false
+            hasCommentUpdate: false,
+            hasStartTimeUpdate: false,
+            hasEndTimeUpdate: false
         };
         setActiveEntry(newEntry);
         setIsTracking(true);
@@ -84,6 +90,18 @@ export function TimeTrackerProvider() {
     function handleCommentChange(id: number, comment: string) {
         setTimeEntries(prevEntries =>
             prevEntries.map(entry => (entry.id === id ? { ...entry, comment, hasCommentUpdate: true } : entry))
+        )
+    }
+
+    function handleStartTimeChange(id: number, startTime: string) {
+        setTimeEntries(prevEntries =>
+            prevEntries.map(entry => (entry.id === id ? { ...entry, startTime: new Date(startTime), hasStartTimeUpdate: true } : entry))
+        )
+    }
+
+    function handleEndTimeChange(id: number, endTime: string) {
+        setTimeEntries(prevEntries =>
+            prevEntries.map(entry => (entry.id === id ? { ...entry, endTime: new Date(endTime), hasEndTimeUpdate: true } : entry))
         )
     }
 
@@ -116,7 +134,9 @@ export function TimeTrackerProvider() {
                     comment: entry.comment,
                     startTime: new Date(entry.startTime),
                     endTime: new Date(entry.endTime),
-                    hasCommentUpdate: false
+                    hasCommentUpdate: false,
+                    hasStartTimeUpdate: false,
+                    hasEndTimeUpdate: false
                 })
             }
         }
@@ -129,7 +149,7 @@ export function TimeTrackerProvider() {
     }, [selectedCustomer])
 
     return (
-        <TimeTrackerContext.Provider value={{ reloadTimeEntries: fetchData, timeEntries: timeEntries, elapsedTime, isTracking, startTracking: handleStartTracking, stopTracking: handleStopTracking, changeComment: handleCommentChange, saveComment }}>
+        <TimeTrackerContext.Provider value={{ reloadTimeEntries: fetchData, timeEntries: timeEntries, elapsedTime, isTracking, startTracking: handleStartTracking, stopTracking: handleStopTracking, changeComment: handleCommentChange, saveComment, changeStartTime: handleStartTimeChange, changeEndTime: handleEndTimeChange }}>
             {loading ? <></> : <Outlet />}
         </TimeTrackerContext.Provider>
     )
