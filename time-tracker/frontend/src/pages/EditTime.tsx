@@ -4,11 +4,13 @@ import { useTimeTracker } from "../context/TimeTrackerContext"
 
 export default function () {
     let { id } = useParams()
-    const { timeEntries, changeComment, saveComment, reloadTimeEntries, changeStartTime, changeEndTime, saveStartTime, saveEndTime } = useTimeTracker()
+    const { timeEntries, changeComment, saveComment, reloadTimeEntries, saveStartTime, saveEndTime } = useTimeTracker()
     const [endTime, setEndTime] = useState<string | null>(null)
     const [startTime, setStartTime] = useState<string | null>(null)
+    const [comment, setComment] = useState<string>("")
     const [startTimeChanged, setStartTimeChanged] = useState(false)
     const [endTimeChanged, setEndTimeChanged] = useState(false)
+    const [commentChanged, setCommentChanged] = useState(false)
 
     useEffect(() => {
         console.log("getting entry for", id)
@@ -20,66 +22,97 @@ export default function () {
                 if (entry.endTime != null) {
                     setEndTime(entry.endTime?.toString())
                 }
+                setComment(entry.comment)
             }
         }
     }, [id, timeEntries])
 
     return (
         <>
-            <Link to="/" className="bg-neutral-700 hover:bg-neutral-600 text-white font-bold py-2 px-4 rounded">
-                Time Tracker
-            </Link>
-            <h1>Edit Time {id}</h1>
-            <div className="flex flex-col gap-2 my-4">
-                {startTime != null ? (
-                    <div className="flex flex-col">
-                        <label>Start Time</label>
-                        <div className="flex gap-1">
-                            <input className="grow" type="text" value={startTime} onChange={(event) => {
-                                setStartTime(event.target.value)
-                                if (id) {
-                                    // changeStartTime(+id, startTime)
-                                    setStartTimeChanged(true)
-                                }
+            <header className="mb-12 flex items-center justify-between">
+                <div>
+                    <h1 className="text-4xl font-bold text-gray-100">Edit Element</h1>
+                    <p className="text-gray-400">Edit the time entry.</p>
+                </div>
+                <Link to="/" className="bg-neutral-700 hover:bg-neutral-600 text-white font-bold py-2 px-4 rounded">
+                    Time Tracker
+                </Link>
+            </header>
+
+            <main>
+                <div className="flex flex-col gap-2 my-4">
+                    <div className="bg-neutral-800 rounded-lg shadow-lg p-6 mb-8">
+                        <div className="flex flex-col gap-1">
+                            <label className="font-bold text-xl">Start Time</label>
+                            <textarea className="mt-2 h-28 p-2 rounded-lg bg-neutral-700" value={comment} onChange={(event) => {
+                                setComment(event.target.value)
+                                setCommentChanged(true)
                             }} />
-                            {startTimeChanged ? (
+                            {commentChanged ? (
                                 <button onClick={() => {
                                     if (id) {
-                                        saveStartTime(+id, startTime).then(() => {
-                                            setStartTimeChanged(false)
-                                            reloadTimeEntries()
-                                        })
+                                        changeComment(+id, comment)
+                                        saveComment(+id)
+                                        setCommentChanged(false)
                                     }
                                 }}>Save</button>
                             ) : null}
                         </div>
                     </div>
-                ) : null}
-                {endTime != null ? (
-                    <div className="flex flex-col">
-                        <label>End Time</label>
-                        <div className="flex gap-1">
-                            <input className="grow" type="text" value={endTime} onChange={(event) => {
-                                setEndTime(event.target.value)
-                                if (id) {
-                                    // changeEndTime(+id, endTime)
-                                    setEndTimeChanged(true)
-                                }
-                            }} />
-                            {endTimeChanged ? (
-                                <button onClick={() => {
-                                    if (id) {
-                                        saveEndTime(+id, endTime).then(() => {
-                                            setEndTimeChanged(false)
-                                            reloadTimeEntries()
-                                        })
-                                    }
-                                }}>Save</button>
-                            ) : null}
-                        </div>
+                    <div className="bg-neutral-800 rounded-lg shadow-lg p-6 mb-8">
+                        {startTime != null ? (
+                            <div className="flex flex-col">
+                                <label className="font-bold text-xl">Start Time</label>
+                                <div className="flex gap-1">
+                                    <input className="grow mt-2 p-2 rounded-lg bg-neutral-700" type="text" value={startTime} onChange={(event) => {
+                                        setStartTime(event.target.value)
+                                        if (id) {
+                                            // changeStartTime(+id, startTime)
+                                            setStartTimeChanged(true)
+                                        }
+                                    }} />
+                                    {startTimeChanged ? (
+                                        <button onClick={() => {
+                                            if (id) {
+                                                saveStartTime(+id, startTime).then(() => {
+                                                    setStartTimeChanged(false)
+                                                    reloadTimeEntries()
+                                                })
+                                            }
+                                        }}>Save</button>
+                                    ) : null}
+                                </div>
+                            </div>
+                        ) : null}
                     </div>
-                ) : null}
-            </div>
+                    <div className="bg-neutral-800 rounded-lg shadow-lg p-6 mb-8">
+                        {endTime != null ? (
+                            <div className="flex flex-col">
+                                <label className="font-bold text-xl">End Time</label>
+                                <div className="flex gap-1">
+                                    <input className="grow mt-2 p-2 rounded-lg bg-neutral-700" type="text" value={endTime} onChange={(event) => {
+                                        setEndTime(event.target.value)
+                                        if (id) {
+                                            // changeEndTime(+id, endTime)
+                                            setEndTimeChanged(true)
+                                        }
+                                    }} />
+                                    {endTimeChanged ? (
+                                        <button onClick={() => {
+                                            if (id) {
+                                                saveEndTime(+id, endTime).then(() => {
+                                                    setEndTimeChanged(false)
+                                                    reloadTimeEntries()
+                                                })
+                                            }
+                                        }}>Save</button>
+                                    ) : null}
+                                </div>
+                            </div>
+                        ) : null}
+                    </div>
+                </div>
+            </main>
         </>
     )
 }

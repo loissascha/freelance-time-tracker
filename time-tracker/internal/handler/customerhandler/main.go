@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"time"
 	"time-tracker/internal/entities"
 	"time-tracker/internal/repositories/customerrepository"
@@ -56,22 +57,26 @@ func (h *CustomerHandler) UpdateCustomerTimeComment(id int64, comment string) {
 }
 
 func (h *CustomerHandler) UpdateCustomerTimeStartTime(id int64, startTime string) {
-	t, err := time.Parse("", startTime)
+	re := regexp.MustCompile(`\s\(.*\)$`)
+	startTime = re.ReplaceAllString(startTime, "")
+	t, err := time.Parse("Mon Jan 2 2006 15:04:05 GMT-0700", startTime)
 	if err != nil {
 		panic(err)
 	}
-	err = h.timeRepo.UpdateTimeStartTime(id, t)
+	err = h.timeRepo.UpdateTimeStartTime(id, t.UTC())
 	if err != nil {
 		panic(err)
 	}
 }
 
 func (h *CustomerHandler) UpdateCustomerTimeEndTime(id int64, endTime string) {
-	t, err := time.Parse("", endTime)
+	re := regexp.MustCompile(`\s\(.*\)$`)
+	endTime = re.ReplaceAllString(endTime, "")
+	t, err := time.Parse("Mon Jan 2 2006 15:04:05 GMT-0700", endTime)
 	if err != nil {
 		panic(err)
 	}
-	err = h.timeRepo.UpdateTimeEndTime(id, t)
+	err = h.timeRepo.UpdateTimeEndTime(id, t.UTC())
 	if err != nil {
 		panic(err)
 	}
