@@ -33,11 +33,11 @@ export default function () {
             <main>
                 <div className="bg-neutral-800 rounded-lg shadow-lg p-6 mb-8">
                     <label>From: </label>
-                    <input type="datetime-local" value={fromTime} onChange={(e) => setFromTime(e.target.value)} />
+                    <input type="date" value={fromTime} onChange={(e) => setFromTime(e.target.value)} />
                 </div>
                 <div className="bg-neutral-800 rounded-lg shadow-lg p-6 mb-8">
                     <label>Until: </label>
-                    <input type="datetime-local" value={untilTime} onChange={(e) => setUntilTime(e.target.value)} />
+                    <input type="date" value={untilTime} onChange={(e) => setUntilTime(e.target.value)} />
                 </div>
                 <MainButton onClick={() => exportButton()}>Export</MainButton>
             </main>

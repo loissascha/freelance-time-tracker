@@ -109,7 +109,7 @@ func (h *CustomerHandler) DeleteCustomer(id int64) bool {
 
 func (h *CustomerHandler) ExportCustomer(customerId int64, from string, until string) {
 	re := regexp.MustCompile(`\s\(.*\)$`)
-	format := "2006-01-02T15:04"
+	format := "2006-01-02"
 	from = re.ReplaceAllString(from, "")
 	until = re.ReplaceAllString(until, "")
 	tFrom, err := time.Parse(format, from)
@@ -129,7 +129,7 @@ func (h *CustomerHandler) ExportCustomer(customerId int64, from string, until st
 		panic(err)
 	}
 	fmt.Println("Found", len(times), "customers for export")
-	filename := fmt.Sprintf("export_customer_%v.csv", name)
+	filename := fmt.Sprintf("export_customer_%v_%v-%v.csv", name, from, until)
 	appName := "timeTracker"
 	configDir, err := os.UserConfigDir()
 	if err != nil {
