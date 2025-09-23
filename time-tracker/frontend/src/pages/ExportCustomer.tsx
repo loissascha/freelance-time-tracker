@@ -28,6 +28,14 @@ export default function () {
                 </div>
             </header>
             <main>
+                <div className="bg-neutral-800 rounded-lg shadow-lg p-6 mb-8">
+                    <label>From: </label>
+                    <input type="datetime-local" />
+                </div>
+                <div className="bg-neutral-800 rounded-lg shadow-lg p-6 mb-8">
+                    <label>Until: </label>
+                    <input type="datetime-local" />
+                </div>
                 <MainButton onClick={() => exportButton()}>Export</MainButton>
             </main>
         </>
