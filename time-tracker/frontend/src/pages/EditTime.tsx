@@ -4,7 +4,7 @@ import { useTimeTracker } from "../context/TimeTrackerContext"
 
 export default function () {
     let { id } = useParams()
-    const { timeEntries, changeComment, saveComment, reloadTimeEntries, changeStartTime, changeEndTime } = useTimeTracker()
+    const { timeEntries, changeComment, saveComment, reloadTimeEntries, changeStartTime, changeEndTime, saveStartTime, saveEndTime } = useTimeTracker()
     const [endTime, setEndTime] = useState<string | null>(null)
     const [startTime, setStartTime] = useState<string | null>(null)
     const [startTimeChanged, setStartTimeChanged] = useState(false)
@@ -36,14 +36,21 @@ export default function () {
                         <label>Start Time</label>
                         <div className="flex gap-1">
                             <input className="grow" type="text" value={startTime} onChange={(event) => {
+                                setStartTime(event.target.value)
                                 if (id) {
-                                    setStartTime(event.target.value)
-                                    changeStartTime(+id, startTime)
+                                    // changeStartTime(+id, startTime)
                                     setStartTimeChanged(true)
                                 }
                             }} />
                             {startTimeChanged ? (
-                                <button>Save</button>
+                                <button onClick={() => {
+                                    if (id) {
+                                        saveStartTime(+id, startTime).then(() => {
+                                            setStartTimeChanged(false)
+                                            reloadTimeEntries()
+                                        })
+                                    }
+                                }}>Save</button>
                             ) : null}
                         </div>
                     </div>
@@ -53,14 +60,21 @@ export default function () {
                         <label>End Time</label>
                         <div className="flex gap-1">
                             <input className="grow" type="text" value={endTime} onChange={(event) => {
+                                setEndTime(event.target.value)
                                 if (id) {
-                                    setEndTime(event.target.value)
-                                    changeEndTime(+id, endTime)
+                                    // changeEndTime(+id, endTime)
                                     setEndTimeChanged(true)
                                 }
                             }} />
                             {endTimeChanged ? (
-                                <button>Save</button>
+                                <button onClick={() => {
+                                    if (id) {
+                                        saveEndTime(+id, endTime).then(() => {
+                                            setEndTimeChanged(false)
+                                            reloadTimeEntries()
+                                        })
+                                    }
+                                }}>Save</button>
                             ) : null}
                         </div>
                     </div>

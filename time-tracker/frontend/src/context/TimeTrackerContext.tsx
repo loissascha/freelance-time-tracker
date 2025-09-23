@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { Outlet } from "react-router"
 import { useCustomer } from "./CustomerContext"
-import { GetCustomerTimes, AddCustomerTime, UpdateCustomerTimeComment } from "../../wailsjs/go/customerhandler/CustomerHandler"
+import { GetCustomerTimes, AddCustomerTime, UpdateCustomerTimeComment, UpdateCustomerTimeStartTime, UpdateCustomerTimeEndTime } from "../../wailsjs/go/customerhandler/CustomerHandler"
 
 interface TimeEntry {
     id: number;
@@ -24,6 +24,8 @@ interface TimeTrackerContextType {
     changeStartTime: (id: number, startTime: string) => void
     changeEndTime: (id: number, endTime: string) => void
     saveComment: (id: number) => Promise<void>
+    saveStartTime: (id: number, newTime: string) => Promise<void>
+    saveEndTime: (id: number, newTime: string) => Promise<void>
     reloadTimeEntries: () => Promise<void>
 }
 
@@ -105,6 +107,30 @@ export function TimeTrackerProvider() {
         )
     }
 
+    async function saveStartTime(id: number, newTime: string) {
+        for (const entry of timeEntries) {
+            if (entry.id != id) {
+                continue
+            }
+            await UpdateCustomerTimeStartTime(entry.id, newTime)
+        }
+        // setTimeEntries(prevEntries =>
+        //     prevEntries.map(entry => (entry.id === id ? { ...entry, hasStartTimeUpdate: false } : entry))
+        // )
+    }
+
+    async function saveEndTime(id: number, newTime: string) {
+        for (const entry of timeEntries) {
+            if (entry.id != id) {
+                continue
+            }
+            await UpdateCustomerTimeEndTime(entry.id, newTime)
+        }
+        // setTimeEntries(prevEntries =>
+        //     prevEntries.map(entry => (entry.id === id ? { ...entry, hasEndTimeUpdate: false } : entry))
+        // )
+    }
+
     async function saveComment(id: number) {
         for (const entry of timeEntries) {
             if (entry.id != id) {
@@ -149,7 +175,7 @@ export function TimeTrackerProvider() {
     }, [selectedCustomer])
 
     return (
-        <TimeTrackerContext.Provider value={{ reloadTimeEntries: fetchData, timeEntries: timeEntries, elapsedTime, isTracking, startTracking: handleStartTracking, stopTracking: handleStopTracking, changeComment: handleCommentChange, saveComment, changeStartTime: handleStartTimeChange, changeEndTime: handleEndTimeChange }}>
+        <TimeTrackerContext.Provider value={{ reloadTimeEntries: fetchData, timeEntries: timeEntries, elapsedTime, isTracking, startTracking: handleStartTracking, stopTracking: handleStopTracking, changeComment: handleCommentChange, saveComment, saveStartTime, saveEndTime, changeStartTime: handleStartTimeChange, changeEndTime: handleEndTimeChange }}>
             {loading ? <></> : <Outlet />}
         </TimeTrackerContext.Provider>
     )
