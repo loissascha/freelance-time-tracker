@@ -1,13 +1,16 @@
 import { Link, useParams } from "react-router";
 import { ExportCustomer } from "../../wailsjs/go/customerhandler/CustomerHandler";
 import { MainButton } from "../components/Button";
+import { useState } from "react";
 
 export default function () {
     let { id } = useParams()
+    const [fromTime, setFromTime] = useState("")
+    const [untilTime, setUntilTime] = useState("")
 
     async function exportButton() {
         if (!id) return
-        await ExportCustomer(+id)
+        await ExportCustomer(+id, fromTime, untilTime)
         alert("Export erfolgreich!")
     }
 
@@ -30,11 +33,11 @@ export default function () {
             <main>
                 <div className="bg-neutral-800 rounded-lg shadow-lg p-6 mb-8">
                     <label>From: </label>
-                    <input type="datetime-local" />
+                    <input type="datetime-local" value={fromTime} onChange={(e) => setFromTime(e.target.value)} />
                 </div>
                 <div className="bg-neutral-800 rounded-lg shadow-lg p-6 mb-8">
                     <label>Until: </label>
-                    <input type="datetime-local" />
+                    <input type="datetime-local" value={untilTime} onChange={(e) => setUntilTime(e.target.value)} />
                 </div>
                 <MainButton onClick={() => exportButton()}>Export</MainButton>
             </main>

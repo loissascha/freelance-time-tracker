@@ -107,12 +107,24 @@ func (h *CustomerHandler) DeleteCustomer(id int64) bool {
 	return true
 }
 
-func (h *CustomerHandler) ExportCustomer(customerId int64) {
+func (h *CustomerHandler) ExportCustomer(customerId int64, from string, until string) {
+	re := regexp.MustCompile(`\s\(.*\)$`)
+	format := "2006-01-02T15:04"
+	from = re.ReplaceAllString(from, "")
+	until = re.ReplaceAllString(until, "")
+	tFrom, err := time.Parse(format, from)
+	if err != nil {
+		panic(err)
+	}
+	tUntil, err := time.Parse(format, until)
+	if err != nil {
+		panic(err)
+	}
 	name, err := h.customerRepo.GetCustomerName(customerId)
 	if err != nil {
 		panic(err)
 	}
-	times, err := h.timeRepo.GetTimesForCustomer(customerId)
+	times, err := h.timeRepo.GetTimesForCustomerLimitedByTimes(customerId, tFrom, tUntil)
 	if err != nil {
 		panic(err)
 	}

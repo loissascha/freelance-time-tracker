@@ -123,3 +123,24 @@ func (r *TrackedTimesRepository) GetTimesForCustomer(customerId int64) ([]entiti
 
 	return trackedTimes, nil
 }
+
+func (r *TrackedTimesRepository) GetTimesForCustomerLimitedByTimes(customerId int64, from time.Time, until time.Time) ([]entities.TrackedTime, error) {
+	selectSql := `SELECT id, startTime, endTime, comment FROM tracked_times WHERE customer_id=? AND deleted=false AND startTime>=? AND startTime <=? ORDER BY id DESC`
+	rows, err := r.db.Db.Query(selectSql, customerId, from, until)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var trackedTimes []entities.TrackedTime
+	for rows.Next() {
+		var trackedTime entities.TrackedTime
+		trackedTime.CustomerId = customerId
+		if err := rows.Scan(&trackedTime.ID, &trackedTime.StartTime, &trackedTime.EndTime, &trackedTime.Comment); err != nil {
+			return nil, err
+		}
+		trackedTimes = append(trackedTimes, trackedTime)
+	}
+
+	return trackedTimes, nil
+}

@@ -18,8 +18,8 @@ export function DeleteTime(arg1) {
   return window['go']['customerhandler']['CustomerHandler']['DeleteTime'](arg1);
 }
 
-export function ExportCustomer(arg1) {
-  return window['go']['customerhandler']['CustomerHandler']['ExportCustomer'](arg1);
+export function ExportCustomer(arg1, arg2, arg3) {
+  return window['go']['customerhandler']['CustomerHandler']['ExportCustomer'](arg1, arg2, arg3);
 }
 
 export function GetCustomerTimes(arg1) {

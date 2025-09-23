@@ -42,13 +42,6 @@ function App() {
         await reloadTimeEntries()
     }
 
-    async function exportButton() {
-        if (!selectedCustomer) return
-        console.log("exporting customer", selectedCustomer)
-        await ExportCustomer(selectedCustomer)
-        alert("Export erfolgreich!")
-    }
-
     return (
         <>
             <header className="mb-12 flex items-center justify-between">

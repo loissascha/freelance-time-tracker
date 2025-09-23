@@ -11,7 +11,7 @@ export function DeleteCustomer(arg1:number):Promise<boolean>;
 
 export function DeleteTime(arg1:number):Promise<void>;
 
-export function ExportCustomer(arg1:number):Promise<void>;
+export function ExportCustomer(arg1:number,arg2:string,arg3:string):Promise<void>;
 
 export function GetCustomerTimes(arg1:number):Promise<Array<entities.TrackedTime>>;
 
