@@ -1,18 +1,21 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router"
+import { Link, useParams } from "react-router"
 import { useTimeTracker } from "../context/TimeTrackerContext"
 
 export default function () {
     let { id } = useParams()
-    const { timeEntries, changeComment, saveComment, reloadTimeEntries } = useTimeTracker()
+    const { timeEntries, changeComment, saveComment, reloadTimeEntries, changeStartTime, changeEndTime } = useTimeTracker()
     const [endTime, setEndTime] = useState<string | null>(null)
     const [startTime, setStartTime] = useState<string | null>(null)
+    const [startTimeChanged, setStartTimeChanged] = useState(false)
+    const [endTimeChanged, setEndTimeChanged] = useState(false)
 
     useEffect(() => {
         console.log("getting entry for", id)
         for (var entry of timeEntries) {
             if ("" + entry.id == id) {
                 console.log("found entry", entry)
+                console.log("Start time:", entry.startTime)
                 setStartTime(entry.startTime.toString())
                 if (entry.endTime != null) {
                     setEndTime(entry.endTime?.toString())
@@ -23,18 +26,43 @@ export default function () {
 
     return (
         <>
+            <Link to="/" className="bg-neutral-700 hover:bg-neutral-600 text-white font-bold py-2 px-4 rounded">
+                Time Tracker
+            </Link>
             <h1>Edit Time {id}</h1>
             <div className="flex flex-col gap-2 my-4">
                 {startTime != null ? (
                     <div className="flex flex-col">
                         <label>Start Time</label>
-                        <input type="text" value={startTime} />
+                        <div className="flex gap-1">
+                            <input className="grow" type="text" value={startTime} onChange={(event) => {
+                                if (id) {
+                                    setStartTime(event.target.value)
+                                    changeStartTime(+id, startTime)
+                                    setStartTimeChanged(true)
+                                }
+                            }} />
+                            {startTimeChanged ? (
+                                <button>Save</button>
+                            ) : null}
+                        </div>
                     </div>
                 ) : null}
                 {endTime != null ? (
                     <div className="flex flex-col">
                         <label>End Time</label>
-                        <input type="text" value={endTime} />
+                        <div className="flex gap-1">
+                            <input className="grow" type="text" value={endTime} onChange={(event) => {
+                                if (id) {
+                                    setEndTime(event.target.value)
+                                    changeEndTime(+id, endTime)
+                                    setEndTimeChanged(true)
+                                }
+                            }} />
+                            {endTimeChanged ? (
+                                <button>Save</button>
+                            ) : null}
+                        </div>
                     </div>
                 ) : null}
             </div>
