@@ -1,7 +1,15 @@
 import { Link, useParams } from "react-router";
+import { ExportCustomer } from "../../wailsjs/go/customerhandler/CustomerHandler";
+import { MainButton } from "../components/Button";
 
 export default function () {
     let { id } = useParams()
+
+    async function exportButton() {
+        if (!id) return
+        await ExportCustomer(+id)
+        alert("Export erfolgreich!")
+    }
 
     return (
         <>
@@ -19,6 +27,9 @@ export default function () {
                     </Link>
                 </div>
             </header>
+            <main>
+                <MainButton onClick={() => exportButton()}>Export</MainButton>
+            </main>
         </>
     )
 }
