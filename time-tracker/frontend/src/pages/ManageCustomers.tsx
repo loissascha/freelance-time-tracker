@@ -50,7 +50,7 @@ export default function () {
                     <h2 className="text-2xl font-bold mb-4">Customers</h2>
                     <div className="border border-gray-600 rounded-lg">
                         {customers.map((customer) => (
-                            <div className="flex py-2 px-3 border-b border-gray-600 last-of-type:border-b-0 hover:bg-neutral-700">
+                            <div key={customer.value} className="flex py-2 px-3 border-b border-gray-600 last-of-type:border-b-0 hover:bg-neutral-700">
                                 <div className="grow">{customer.label}</div>
                                 <div className="flex gap-1">
                                     <ExportIcon />
