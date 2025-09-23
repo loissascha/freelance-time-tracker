@@ -56,9 +56,16 @@ function App() {
                     <h1 className="text-4xl font-bold text-gray-100">Time Tracker</h1>
                     <p className="text-gray-400">Track your work with ease.</p>
                 </div>
-                <Link to="/manage-customers" className="bg-neutral-700 hover:bg-neutral-600 text-white font-bold py-2 px-4 rounded">
-                    Manage Customers
-                </Link>
+                <div className='flex gap-2'>
+                    {selectedCustomer ? (
+                        <Link to={"/export/" + selectedCustomer} className='bg-neutral-700 hover:bg-neutral-600 text-white font-bold py-2 px-4 rounded cursor-pointer'>
+                            Export
+                        </Link>
+                    ) : null}
+                    <Link to="/manage-customers" className="bg-neutral-700 hover:bg-neutral-600 text-white font-bold py-2 px-4 rounded">
+                        Manage Customers
+                    </Link>
+                </div>
             </header>
 
             <main>
@@ -121,11 +128,6 @@ function App() {
                 <div className="bg-neutral-800 rounded-lg shadow-lg p-6">
                     <div className='mb-4 flex justify-between items-center'>
                         <h2 className="text-2xl font-bold mb-4">Time Log</h2>
-                        {selectedCustomer ? (
-                            <button className='bg-neutral-700 hover:bg-neutral-600 text-white font-bold py-2 px-4 rounded cursor-pointer' onClick={() => {
-                                exportButton()
-                            }}>Export</button>
-                        ) : null}
                     </div>
                     <div className="space-y-4">
                         {timeEntries.length > 0 ? (

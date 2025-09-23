@@ -8,6 +8,7 @@ import ManageCustomers from './pages/ManageCustomers'
 import { CustomerProvider } from './context/CustomerContext'
 import { TimeTrackerProvider } from './context/TimeTrackerContext'
 import EditTime from './pages/EditTime'
+import ExportCustomer from './pages/ExportCustomer'
 
 const container = document.getElementById('root')
 
@@ -23,6 +24,7 @@ root.render(
                             <Route index path='/' element={<App />} />
                             <Route path='/manage-customers' element={<ManageCustomers />} />
                             <Route path='/edit/time/:id' element={<EditTime />} />
+                            <Route path='/export/:id' element={<ExportCustomer />} />
                         </Route>
                     </Route>
                 </Route>

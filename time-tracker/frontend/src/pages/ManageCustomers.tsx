@@ -53,7 +53,9 @@ export default function () {
                             <div key={customer.value} className="flex py-2 px-3 border-b border-gray-600 last-of-type:border-b-0 hover:bg-neutral-700">
                                 <div className="grow">{customer.label}</div>
                                 <div className="flex gap-1">
-                                    <ExportIcon />
+                                    <Link to={"/export/" + customer.value} >
+                                        <ExportIcon />
+                                    </Link>
                                     <button className="cursor-pointer" onClick={() => deleteCustomerButton(customer.value)}>
                                         <BackspaceIcon className="text-red-500" />
                                     </button>
