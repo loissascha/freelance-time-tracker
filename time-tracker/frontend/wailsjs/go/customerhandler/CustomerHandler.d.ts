@@ -19,6 +19,6 @@ export function GetCustomers():Promise<Array<entities.Customer>>;
 
 export function UpdateCustomerTimeComment(arg1:number,arg2:string):Promise<void>;
 
-export function UpdateCustomerTimeEndTime(arg1:number,arg2:time.Time):Promise<void>;
+export function UpdateCustomerTimeEndTime(arg1:number,arg2:string):Promise<void>;
 
-export function UpdateCustomerTimeStartTime(arg1:number,arg2:time.Time):Promise<void>;
+export function UpdateCustomerTimeStartTime(arg1:number,arg2:string):Promise<void>;
