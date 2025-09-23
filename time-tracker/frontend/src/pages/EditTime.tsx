@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router"
 import { useTimeTracker } from "../context/TimeTrackerContext"
+import { MainButton } from "../components/Button"
 
 export default function () {
     let { id } = useParams()
@@ -46,13 +47,15 @@ export default function () {
                                 setCommentChanged(true)
                             }} />
                             {commentChanged ? (
-                                <button onClick={() => {
-                                    if (id) {
-                                        changeComment(+id, comment)
-                                        saveComment(+id)
-                                        setCommentChanged(false)
-                                    }
-                                }}>Save</button>
+                                <div className="mt-2">
+                                    <MainButton onClick={() => {
+                                        if (id) {
+                                            changeComment(+id, comment)
+                                            saveComment(+id)
+                                            setCommentChanged(false)
+                                        }
+                                    }}>Save</MainButton>
+                                </div>
                             ) : null}
                         </div>
                     </div>
@@ -60,8 +63,8 @@ export default function () {
                         {startTime != null ? (
                             <div className="flex flex-col">
                                 <label className="font-bold text-xl">Start Time</label>
-                                <div className="flex gap-1">
-                                    <input className="grow mt-2 p-2 rounded-lg bg-neutral-700" type="text" value={startTime} onChange={(event) => {
+                                <div className="flex gap-2">
+                                    <input className="grow py-3 px-4 rounded-md bg-neutral-700" type="text" value={startTime} onChange={(event) => {
                                         setStartTime(event.target.value)
                                         if (id) {
                                             // changeStartTime(+id, startTime)
@@ -69,14 +72,14 @@ export default function () {
                                         }
                                     }} />
                                     {startTimeChanged ? (
-                                        <button onClick={() => {
+                                        <MainButton onClick={() => {
                                             if (id) {
                                                 saveStartTime(+id, startTime).then(() => {
                                                     setStartTimeChanged(false)
                                                     reloadTimeEntries()
                                                 })
                                             }
-                                        }}>Save</button>
+                                        }}>Save</MainButton>
                                     ) : null}
                                 </div>
                             </div>
@@ -86,8 +89,8 @@ export default function () {
                         {endTime != null ? (
                             <div className="flex flex-col">
                                 <label className="font-bold text-xl">End Time</label>
-                                <div className="flex gap-1">
-                                    <input className="grow mt-2 p-2 rounded-lg bg-neutral-700" type="text" value={endTime} onChange={(event) => {
+                                <div className="flex gap-2">
+                                    <input className="grow p-2 rounded-md bg-neutral-700" type="text" value={endTime} onChange={(event) => {
                                         setEndTime(event.target.value)
                                         if (id) {
                                             // changeEndTime(+id, endTime)
@@ -95,14 +98,14 @@ export default function () {
                                         }
                                     }} />
                                     {endTimeChanged ? (
-                                        <button onClick={() => {
+                                        <MainButton onClick={() => {
                                             if (id) {
                                                 saveEndTime(+id, endTime).then(() => {
                                                     setEndTimeChanged(false)
                                                     reloadTimeEntries()
                                                 })
                                             }
-                                        }}>Save</button>
+                                        }}>Save</MainButton>
                                     ) : null}
                                 </div>
                             </div>
