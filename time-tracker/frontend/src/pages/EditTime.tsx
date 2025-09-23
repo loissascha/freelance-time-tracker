@@ -13,11 +13,8 @@ export default function () {
     const [commentChanged, setCommentChanged] = useState(false)
 
     useEffect(() => {
-        console.log("getting entry for", id)
         for (var entry of timeEntries) {
             if ("" + entry.id == id) {
-                console.log("found entry", entry)
-                console.log("Start time:", entry.startTime)
                 setStartTime(entry.startTime.toString())
                 if (entry.endTime != null) {
                     setEndTime(entry.endTime?.toString())
