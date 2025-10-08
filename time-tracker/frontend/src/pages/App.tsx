@@ -12,7 +12,7 @@ import DeleteIcon from '../components/icons/DeleteIcon';
 
 function App() {
     const { customers, selectedCustomer, setSelectedCustomer } = useCustomer()
-    const { timeEntries, elapsedTime, isTracking, startTracking, stopTracking, changeComment, saveComment, reloadTimeEntries } = useTimeTracker()
+    const { timeEntries, elapsedTime, isTracking, startTracking, stopTracking, changeComment, saveComment, reloadTimeEntries, overallTimeInSeconds, weeklyTimeInSeconds, monthlyTimeInSeconds } = useTimeTracker()
     const [askDelete, setAskDelete] = useState(0)
 
     const formatTime = (date: Date) => {
@@ -27,6 +27,25 @@ function App() {
         const s = (seconds % 60).toString().padStart(2, '0');
         return `${h}:${m}:${s}`;
     };
+
+    function formatSeconds(totalSeconds: number): string {
+        // Handle invalid input
+        if (isNaN(totalSeconds) || totalSeconds < 0) {
+            return "00:00:00";
+        }
+
+        // Calculate hours, minutes, and seconds
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = Math.floor(totalSeconds % 60);
+
+        // Pad each component with a leading zero if it's a single digit
+        const paddedHours = String(hours).padStart(2, '0');
+        const paddedMinutes = String(minutes).padStart(2, '0');
+        const paddedSeconds = String(seconds).padStart(2, '0');
+
+        return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+    }
 
     const formatElapsedTime = (seconds: number) => {
         const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
@@ -119,8 +138,13 @@ function App() {
                 ) : null}
 
                 <div className="bg-neutral-800 rounded-lg shadow-lg p-6">
-                    <div className='mb-4 flex justify-between items-center'>
-                        <h2 className="text-2xl font-bold mb-4">Time Log</h2>
+                    <div className='mb-4 flex justify-between'>
+                        <h2 className="text-2xl font-bold">Time Log</h2>
+                        <div className='text-neutral-300 text-xs text-end'>
+                            <div>This week: {formatSeconds(weeklyTimeInSeconds)}</div>
+                            <div>This month: {formatSeconds(monthlyTimeInSeconds)}</div>
+                            <div>Overall: {formatSeconds(overallTimeInSeconds)}</div>
+                        </div>
                     </div>
                     <div className="space-y-4">
                         {timeEntries.length > 0 ? (

@@ -2,12 +2,14 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { Outlet } from "react-router"
 import { useCustomer } from "./CustomerContext"
 import { GetCustomerTimes, AddCustomerTime, UpdateCustomerTimeComment, UpdateCustomerTimeStartTime, UpdateCustomerTimeEndTime } from "../../wailsjs/go/customerhandler/CustomerHandler"
+import { a0 } from "react-router/dist/development/index-react-server-client-BQ6FxdA_";
 
 interface TimeEntry {
     id: number;
     customerId: number;
     startTime: Date;
     endTime: Date | null;
+    elapsedTimeSeconds: number | null;
     comment: string;
     hasCommentUpdate: boolean
     hasStartTimeUpdate: boolean
@@ -17,6 +19,9 @@ interface TimeEntry {
 interface TimeTrackerContextType {
     timeEntries: TimeEntry[]
     elapsedTime: number
+    overallTimeInSeconds: number
+    weeklyTimeInSeconds: number
+    monthlyTimeInSeconds: number
     isTracking: boolean
     startTracking: () => void
     stopTracking: () => Promise<void>
@@ -46,6 +51,9 @@ export function TimeTrackerProvider() {
     const [isTracking, setIsTracking] = useState(false);
     const [activeEntry, setActiveEntry] = useState<TimeEntry | null>(null);
     const [elapsedTime, setElapsedTime] = useState(0);
+    const [overallTimeInSeconds, setOverallTimeInSeconds] = useState(0)
+    const [overallTimeThisWeek, setOverallTimeThisWeek] = useState(0)
+    const [overallTimeThisMonth, setOverallTimeThisMonth] = useState(0)
 
     useEffect(() => {
         let timer: number;
@@ -68,6 +76,7 @@ export function TimeTrackerProvider() {
             startTime: new Date(),
             endTime: null,
             comment: '',
+            elapsedTimeSeconds: null,
             hasCommentUpdate: false,
             hasStartTimeUpdate: false,
             hasEndTimeUpdate: false
@@ -143,6 +152,26 @@ export function TimeTrackerProvider() {
         )
     }
 
+    function getStartOfMonth(date: Date = new Date()): Date {
+        const startOfMonth = new Date(date)
+        startOfMonth.setDate(1)
+        startOfMonth.setHours(0, 0, 0, 0)
+        return startOfMonth
+    }
+
+    function getStartOfWeek(date: Date = new Date()): Date {
+        const startOfWeek = new Date(date);
+        const day = startOfWeek.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
+
+        // Calculate the difference to get to the previous Monday
+        // If today is Sunday (0), we subtract 6 days. If Monday (1), 0 days, etc.
+        const diff = startOfWeek.getDate() - ((day + 6) % 7);
+
+        startOfWeek.setDate(diff);
+        startOfWeek.setHours(0, 0, 0, 0);
+        return startOfWeek;
+    }
+
     async function fetchData() {
         setLoading(true)
         if (selectedCustomer == null) {
@@ -152,14 +181,31 @@ export function TimeTrackerProvider() {
         }
         const entries = await GetCustomerTimes(selectedCustomer)
         const newEntries: TimeEntry[] = []
+        let newOverallTimeInSeconds = 0
+        let newOverallThisWeek = 0
+        let newOverallThisMonth = 0
+        const startOfMonth = getStartOfMonth()
+        const startOfWeek = getStartOfWeek()
         if (entries) {
             for (const entry of entries) {
+                const startTime = new Date(entry.startTime)
+                const endTime = new Date(entry.endTime)
+                const elapsedInMs = endTime.getTime() - startTime.getTime()
+                const elapsedInS = elapsedInMs / 1000
+                newOverallTimeInSeconds += elapsedInS
+                if (startTime >= startOfMonth) {
+                    newOverallThisMonth += elapsedInS
+                }
+                if (startTime >= startOfWeek) {
+                    newOverallThisWeek += elapsedInS
+                }
                 newEntries.push({
                     id: entry.id,
                     customerId: entry.customer_id,
                     comment: entry.comment,
                     startTime: new Date(entry.startTime),
                     endTime: new Date(entry.endTime),
+                    elapsedTimeSeconds: elapsedInS,
                     hasCommentUpdate: false,
                     hasStartTimeUpdate: false,
                     hasEndTimeUpdate: false
@@ -167,6 +213,9 @@ export function TimeTrackerProvider() {
             }
         }
         setTimeEntries(newEntries)
+        setOverallTimeInSeconds(Math.floor(newOverallTimeInSeconds))
+        setOverallTimeThisWeek(Math.floor(newOverallThisWeek))
+        setOverallTimeThisMonth(Math.floor(newOverallThisMonth))
         setLoading(false)
     }
 
@@ -175,7 +224,7 @@ export function TimeTrackerProvider() {
     }, [selectedCustomer])
 
     return (
-        <TimeTrackerContext.Provider value={{ reloadTimeEntries: fetchData, timeEntries: timeEntries, elapsedTime, isTracking, startTracking: handleStartTracking, stopTracking: handleStopTracking, changeComment: handleCommentChange, saveComment, saveStartTime, saveEndTime, changeStartTime: handleStartTimeChange, changeEndTime: handleEndTimeChange }}>
+        <TimeTrackerContext.Provider value={{ weeklyTimeInSeconds: overallTimeThisWeek, monthlyTimeInSeconds: overallTimeThisMonth, overallTimeInSeconds, reloadTimeEntries: fetchData, timeEntries: timeEntries, elapsedTime, isTracking, startTracking: handleStartTracking, stopTracking: handleStopTracking, changeComment: handleCommentChange, saveComment, saveStartTime, saveEndTime, changeStartTime: handleStartTimeChange, changeEndTime: handleEndTimeChange }}>
             {loading ? <></> : <Outlet />}
         </TimeTrackerContext.Provider>
     )
