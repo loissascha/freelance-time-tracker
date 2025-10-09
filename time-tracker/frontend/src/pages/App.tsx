@@ -149,24 +149,28 @@ function App() {
                     <div className="space-y-4">
                         {timeEntries.length > 0 ? (
                             timeEntries.map(entry => (
-                                <div key={entry.id} className="bg-neutral-700 p-4 rounded-md flex flex-wrap items-center justify-between gap-4">
-                                    <div className="flex-grow">
-                                        <p className="text-sm text-gray-400">
-                                            {entry.startTime.toLocaleDateString()} | {formatTime(entry.startTime)} - {entry.endTime ? formatTime(entry.endTime) : 'Now'}
-                                        </p>
+                                <div key={entry.id} className='bg-neutral-700 p-4 rounded-md'>
+                                    <div className="flex flex-col sm:flex-row flex-wrap sm:items-center sm:justify-between sm:gap-4">
+                                        <div className="flex-grow">
+                                            <p className="text-sm text-gray-400">
+                                                {entry.startTime.toLocaleDateString()} | {formatTime(entry.startTime)} - {entry.endTime ? formatTime(entry.endTime) : 'Now'}
+                                            </p>
+                                        </div>
+                                        <div className='flex flex-col sm:flex-row flex-wrap items-end justify-end grow'>
+                                            <div className="text-xl font-semibold w-32 text-end sm:text-center">
+                                                {formatDuration(entry.startTime, entry.endTime)}
+                                            </div>
+                                            <div className='flex gap-1'>
+                                                <Link to={"/edit/time/" + entry.id} className='cursor-pointer'>
+                                                    <EditIcon />
+                                                </Link>
+                                                <button className='cursor-pointer text-red-600 font-bold' onClick={() => setAskDelete(entry.id)}>
+                                                    <DeleteIcon />
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="text-xl font-semibold w-32 text-center">
-                                        {formatDuration(entry.startTime, entry.endTime)}
-                                    </div>
-                                    <div className='flex gap-1'>
-                                        <Link to={"/edit/time/" + entry.id} className='cursor-pointer'>
-                                            <EditIcon />
-                                        </Link>
-                                        <button className='cursor-pointer text-red-600 font-bold' onClick={() => setAskDelete(entry.id)}>
-                                            <DeleteIcon />
-                                        </button>
-                                    </div>
-                                    <div className='flex gap-1'>
+                                    <div className='flex gap-1 mt-2'>
                                         <input
                                             type="text"
                                             placeholder="Add a comment..."
