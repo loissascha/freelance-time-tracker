@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from "react"
 import { Outlet } from "react-router"
 import { useCustomer } from "./CustomerContext"
 import { GetCustomerTimes, AddCustomerTime, UpdateCustomerTimeComment, UpdateCustomerTimeStartTime, UpdateCustomerTimeEndTime } from "../../wailsjs/go/customerhandler/CustomerHandler"
-import { a0 } from "react-router/dist/development/index-react-server-client-BQ6FxdA_";
 
 interface TimeEntry {
     id: number;
@@ -95,6 +94,11 @@ export function TimeTrackerProvider() {
             setIsTracking(false);
             setActiveEntry(null);
             setElapsedTime(0);
+            const elapsedInMs = updatedEntry.endTime.getTime() - updatedEntry.startTime.getTime()
+            const elapsedInS = elapsedInMs / 1000
+            setOverallTimeInSeconds((prev) => prev + elapsedInS)
+            setOverallTimeThisWeek((prev) => prev + elapsedInS)
+            setOverallTimeThisMonth((prev) => prev + elapsedInS)
         }
     };
 
