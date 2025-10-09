@@ -6,7 +6,7 @@ import { MainButton, RedButton } from '../components/Button';
 import { useTimeTracker } from '../context/TimeTrackerContext';
 import SaveIcon from '../components/icons/SaveIcon';
 import { useState } from 'react';
-import { DeleteTime, ExportCustomer } from '../../wailsjs/go/customerhandler/CustomerHandler';
+import { DeleteTime } from '../../wailsjs/go/customerhandler/CustomerHandler';
 import EditIcon from '../components/icons/EditIcon';
 import DeleteIcon from '../components/icons/DeleteIcon';
 
