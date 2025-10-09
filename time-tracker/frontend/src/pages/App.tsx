@@ -82,7 +82,7 @@ function App() {
 
             <main>
                 <div className="bg-neutral-800 rounded-lg shadow-lg p-6 mb-8 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-4 me-4">
                         <label htmlFor="customer-select" className="text-lg">Customer / Project:</label>
                         <Select.Root items={customers} value={selectedCustomer} onValueChange={(value) => setSelectedCustomer(value)}>
                             <Select.Trigger className={styles.Select}>
@@ -109,7 +109,7 @@ function App() {
                             </Select.Portal>
                         </Select.Root>
                     </div>
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-4">
                         {isTracking && (
                             <div className="text-3xl font-mono bg-neutral-900 px-4 py-2 rounded-md">
                                 {formatElapsedTime(elapsedTime)}
