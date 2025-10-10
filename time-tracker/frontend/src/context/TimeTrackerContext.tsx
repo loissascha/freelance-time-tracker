@@ -8,7 +8,6 @@ interface TimeEntry {
     customerId: number;
     startTime: Date;
     endTime: Date | null;
-    elapsedTimeSeconds: number | null;
     comment: string;
     hasCommentUpdate: boolean
     hasStartTimeUpdate: boolean
@@ -75,7 +74,6 @@ export function TimeTrackerProvider() {
             startTime: new Date(),
             endTime: null,
             comment: '',
-            elapsedTimeSeconds: null,
             hasCommentUpdate: false,
             hasStartTimeUpdate: false,
             hasEndTimeUpdate: false
@@ -176,6 +174,40 @@ export function TimeTrackerProvider() {
         return startOfWeek;
     }
 
+    async function calculateOverallTimes() {
+        let newOverallTimeInSeconds = 0
+        let newOverallThisWeek = 0
+        let newOverallThisMonth = 0
+        const startOfMonth = getStartOfMonth()
+        const startOfWeek = getStartOfWeek()
+
+        for (const entry of timeEntries) {
+            if (!entry.endTime) {
+                continue
+            }
+            const startTime = new Date(entry.startTime)
+            const endTime = new Date(entry.endTime)
+            const elapsedInMs = endTime.getTime() - startTime.getTime()
+            const elapsedInS = elapsedInMs / 1000
+            newOverallTimeInSeconds += elapsedInS
+            if (startTime >= startOfMonth) {
+                newOverallThisMonth += elapsedInS
+            }
+            if (startTime >= startOfWeek) {
+                newOverallThisWeek += elapsedInS
+            }
+
+        }
+
+        setOverallTimeInSeconds(Math.floor(newOverallTimeInSeconds))
+        setOverallTimeThisWeek(Math.floor(newOverallThisWeek))
+        setOverallTimeThisMonth(Math.floor(newOverallThisMonth))
+    }
+
+    useEffect(() => {
+        calculateOverallTimes()
+    }, [timeEntries])
+
     async function fetchData() {
         setLoading(true)
         if (selectedCustomer == null) {
@@ -185,31 +217,14 @@ export function TimeTrackerProvider() {
         }
         const entries = await GetCustomerTimes(selectedCustomer)
         const newEntries: TimeEntry[] = []
-        let newOverallTimeInSeconds = 0
-        let newOverallThisWeek = 0
-        let newOverallThisMonth = 0
-        const startOfMonth = getStartOfMonth()
-        const startOfWeek = getStartOfWeek()
         if (entries) {
             for (const entry of entries) {
-                const startTime = new Date(entry.startTime)
-                const endTime = new Date(entry.endTime)
-                const elapsedInMs = endTime.getTime() - startTime.getTime()
-                const elapsedInS = elapsedInMs / 1000
-                newOverallTimeInSeconds += elapsedInS
-                if (startTime >= startOfMonth) {
-                    newOverallThisMonth += elapsedInS
-                }
-                if (startTime >= startOfWeek) {
-                    newOverallThisWeek += elapsedInS
-                }
                 newEntries.push({
                     id: entry.id,
                     customerId: entry.customer_id,
                     comment: entry.comment,
                     startTime: new Date(entry.startTime),
                     endTime: new Date(entry.endTime),
-                    elapsedTimeSeconds: elapsedInS,
                     hasCommentUpdate: false,
                     hasStartTimeUpdate: false,
                     hasEndTimeUpdate: false
@@ -217,9 +232,6 @@ export function TimeTrackerProvider() {
             }
         }
         setTimeEntries(newEntries)
-        setOverallTimeInSeconds(Math.floor(newOverallTimeInSeconds))
-        setOverallTimeThisWeek(Math.floor(newOverallThisWeek))
-        setOverallTimeThisMonth(Math.floor(newOverallThisMonth))
         setLoading(false)
     }
 
