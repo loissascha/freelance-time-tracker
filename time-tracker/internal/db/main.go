@@ -28,6 +28,7 @@ func InitDb() *Db {
 	}
 
 	appDataDir := filepath.Join(configDir, appName)
+	fmt.Println("database path:", appDataDir)
 
 	err = os.MkdirAll(appDataDir, 0755)
 	if err != nil {
